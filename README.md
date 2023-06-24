@@ -27,9 +27,61 @@ composer require samiksengupta/laravel-admin
 
 ## Usage
 
-```php
-// Usage description here
+### Setting Up the Admin Panel
+
+After the package is installed in your project and you have configured your Database connection in your `.env` file, run the following command:
+
+```bash
+php artisan admin:install
 ```
+
+This is publish the required configuration, assets and seeders from this package to your project and run migrations and seeders.
+
+If you do not wish to publish the seeders and would rather create them yourself, you can use the `--empty` option when installing.
+
+```bash
+php artisan admin:install --empty
+```
+
+If you do not wish to re-install the Admin Panel to your project or want to forcibly overwrite all files, you may use the `--force` option when installing.
+
+```bash
+php artisan admin:install --force
+```
+
+### Creating Admin Panel Modules
+
+A module is simply a set of Model, Migration, Controller and Policy files that work togather to represent your data in the admin panel. You can create all these files in one go by using the command:
+
+```bash
+php artisan make:module MyModule
+```
+
+This will create a new Model class, a new Migration for the model's database table, a Controller and a Policy in their respective locations. You can edit the newly created Migration file to add whatever columns you want and then run migration to generate the table with the columns in them.
+
+What sets these Classes apart from Laravel's own Model/Controller/Policy Classes is that they extend Laravel Admin's Base Classes that add extra functionality for CRUD operations, Validation, Filter Generation, DataTable Response Generation and a lot more.
+
+If you want to quickly generate default CRUD permissions for this Model and a Menu Item entry for accessing the corresponding web route that will take you to the Model's listing page you can use the following command:
+
+```bash
+php artisan make:module MyModule --permissions --menuitems --seed
+```
+
+This will update the `database/data/permissions.json` and `database/data/menu-items.json` files which will them be used to run the seeders to populate the database. 
+
+If you want to skip seeding initially you can omit the `--seed` option and then make adjustments to these JSON files and run:
+
+```bash
+php artisan db:seed --class=PermissionSeeder
+```
+
+for seeding the Permissions manually (using an updateOrCreate operation)
+
+```bash
+php artisan db:seed --class=MenuItemSeeder
+```
+
+for seeding the MenuItems manually (using a Truncate and Insert operation)
 
 ### Testing
 
