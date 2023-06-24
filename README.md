@@ -49,6 +49,18 @@ If you do not wish to re-install the Admin Panel to your project or want to forc
 php artisan admin:install --force
 ```
 
+#### Default Roles and Users
+
+By Default, Laravel Admin installs two Roles `Dev` and `Admin`. Dev is an unrestricted Role and ignores all permission settings (can access everything). Admin is given most administrative permissions that do not involve some super-level permissions that manages Admin Panel critical data such as deleting Settings and running Commands. Dev can grant Admin any permissions if they want and Admin can pass on whatever permission they have to any other new Roles that are created afterwards.
+
+Default Users are also created for initital login. The following credentials can be used to login as one of these Roles.
+
+Role          | Username       | Password
+------------- | -------------  | -------------
+Developer     | dev            | 123456
+Administrator | admin          | 123456
+
+
 ### Creating Admin Panel Modules
 
 A module is simply a set of Model, Migration, Controller and Policy files that work togather to represent your data in the admin panel. You can create all these files in one go by using the command:
