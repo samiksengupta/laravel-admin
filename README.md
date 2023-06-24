@@ -67,7 +67,7 @@ If you want to quickly generate default CRUD permissions for this Model and a Me
 php artisan make:module MyModule --permissions --menuitems --seed
 ```
 
-This will update the `database/data/permissions.json` and `database/data/menu-items.json` files which will them be used to run the seeders to populate the database. 
+This will update the `database/data/permissions.json` and `database/data/menu-items.json` files which will then be used to run the seeders to populate the database. 
 
 If you want to skip seeding initially you can omit the `--seed` option and then make adjustments to these JSON files and run:
 
@@ -82,6 +82,16 @@ php artisan db:seed --class=MenuItemSeeder
 ```
 
 for seeding the MenuItems manually (using a Truncate and Insert operation)
+
+If you run these commands, you can expect to have:
+
+* A `MyModule` class in `App\Models` namespace
+* A `MyModuleController` class in `App\Http\Controllers\Admin` namespace
+* A `MyModulePolicy` class in `App\Policies` namepsace
+* A `*_create_my_modules_table` file in `database\migrations`
+* A `my-modules` route MenuItem entry in `database\data\menu-items.json`
+* A `MenuItem` Permission entry in `database\data\permissions.json`
+* Support for routes `my-modules`, `my-modules/{id}`, `my-modules/new`, `my-modules/{id}/edit`, `my-modules/{id}/delete` and more, if Auto Routing is enabled
 
 ### Testing
 
