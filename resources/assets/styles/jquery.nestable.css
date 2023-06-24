@@ -1,0 +1,307 @@
+/**
+ * Nestable
+ */
+
+.dd {
+	position: relative;
+	display: block;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dd-list {
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.dd-list .dd-list {
+	padding-left: 30px;
+}
+
+.dd-collapsed .dd-list {
+	display: none;
+}
+
+.dd-item,
+.dd-empty,
+.dd-placeholder {
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	min-height: 20px;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.dd-handle,
+.dd-content {
+	display: block;
+	margin: 0px 0;
+	padding: 5px 10px;
+	background: #fafafa;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	border: 1px solid #ebebeb;
+	-moz-transition: all 300ms ease-in-out;
+	-o-transition: all 300ms ease-in-out;
+	-webkit-transition: all 300ms ease-in-out;
+	transition: all 300ms ease-in-out;
+}
+
+dd-content,
+.dd-content:hover {
+	background: #fff;
+}
+
+.dd-item>button {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	float: left;
+	width: 25px;
+	height: 20px;
+	margin: 5px 0;
+	padding: 0;
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: visible;
+	border: 0;
+	background: transparent;
+	font-size: 12px;
+	line-height: 1;
+	text-align: center;
+	font-weight: bold;
+	margin-right: 10px;
+	outline: 0;
+}
+
+.dd-item>button:after {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: -5px;
+	bottom: -6px;
+	width: 1px;
+	background: #ebebeb;
+}
+
+.dd-item>button:before {
+	content: '+';
+	display: block;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	text-indent: 0;
+}
+
+.dd-item>button[data-action="collapse"]:before {
+	content: '-';
+}
+
+.dd-placeholder,
+.dd-empty {
+	margin: 0px 0;
+	padding: 0;
+	min-height: 30px;
+	background: rgba(245, 245, 246, 0.3);
+	border: 1px dotted #ebebeb;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.dd-empty {
+	border: 1px dashed #bbb;
+	min-height: 100px;
+	background-color: #e5e5e5;
+}
+
+.dd-dragel {
+	position: absolute;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+.dd-dragel>.dd-item .dd-handle,
+.dd-dragel>.dd-item .dd-content {
+	margin-top: 0;
+}
+
+.dd-dragel .dd-handle,
+.dd-dragel .dd-content {
+	-moz-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.nested-list.with-margins .dd-item .dd-handle,
+.nested-list.with-margins .dd-item .dd-content {
+	margin: 5px 0;
+}
+
+.nested-list.custom-drag-button .dd-handle {
+	position: absolute !important;
+	margin: 0 !important;
+	width: 15px;
+	height: 32px;
+	padding-left: 5px;
+	padding-right: 4px;
+	cursor: pointer;
+	padding-top: 7px;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.nested-list.custom-drag-button .dd-handle span {
+	display: block;
+	line-height: 3px;
+	color: rgba(115, 120, 129, 0.7);
+}
+
+.nested-list.custom-drag-button .dd-content {
+	padding-left: 25px;
+}
+
+.nested-list.custom-drag-button button+.dd-handle {
+	left: 24px;
+}
+
+.nested-list.custom-drag-button button+.dd-handle+.dd-content {
+	padding-left: 50px;
+}
+
+.nested-list.custom-drag-button.drag-button-on-hover .dd-item>.dd-handle {
+	-webkit-opacity: 0;
+	-moz-opacity: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+
+.nested-list.custom-drag-button.drag-button-on-hover .dd-item:hover>.dd-handle {
+	-webkit-opacity: 1;
+	-moz-opacity: 1;
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+.custom-handler .dd-item .dd-handle {
+	position: absolute !important;
+	margin: 0 !important;
+	width: 15px;
+	height: 32px;
+	padding-left: 5px;
+	padding-right: 4px;
+	cursor: pointer;
+	padding-top: 7px;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.custom-handler .dd-item .dd-handle span {
+	display: block;
+	line-height: 3px;
+	color: rgba(115, 120, 129, 0.7);
+}
+
+.custom-handler .dd-item .dd-content {
+	padding-left: 25px;
+}
+
+.custom-handler .dd-item button+.dd-handle {
+	left: 24px;
+}
+
+.custom-handler .dd-item button+.dd-handle+.dd-content {
+	padding-left: 50px;
+}
+
+.menu-action {
+	padding: 2px;
+}
+
+.add-new {
+	border: 3px dashed #efefef;
+	padding: 5px 10px 5px 40px;
+	cursor: pointer;
+}
+
+/**
+* Nestable Draggable Handles
+*/
+
+.dd3-content {
+	display: block;
+	margin: 5px 0;
+	padding: 5px 10px 5px 40px;
+	color: #333;
+	text-decoration: none;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	background: #fafafa;
+	background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+	background: -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+	background: linear-gradient(top, #fafafa 0%, #eee 100%);
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+
+.dd3-content:hover {
+	color: #2ea8e5;
+	background: #fff;
+}
+
+.dd-dragel>.dd3-item>.dd3-content {
+	margin: 0;
+}
+
+.dd3-item>button {
+	margin-left: 30px;
+}
+
+.dd3-handle {
+	position: absolute;
+	margin: 0;
+	left: 0;
+	top: 0;
+	cursor: pointer;
+	width: 30px;
+	text-indent: 30px;
+	white-space: nowrap;
+	overflow: hidden;
+	border: 1px solid #aaa;
+	background: #ddd;
+	background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
+	background: -moz-linear-gradient(top, #ddd 0%, #bbb 100%);
+	background: linear-gradient(top, #ddd 0%, #bbb 100%);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.dd3-handle:before {
+	content: '≡';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 3px;
+	width: 100%;
+	text-align: center;
+	text-indent: 0;
+	color: #fff;
+	font-size: 20px;
+	font-weight: normal;
+}
+
+.dd3-handle:hover {
+	background: #ddd;
+}

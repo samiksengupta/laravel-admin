@@ -1,0 +1,1 @@
+<div id="loader" class="loader"><div class="spinner"></div><div class="loader-text">Please Wait</div></div>

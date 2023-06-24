@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Samik\LaravelAdmin\Policies\CrudPolicy;
+
+class DummyClass extends CrudPolicy
+{
+    
+}

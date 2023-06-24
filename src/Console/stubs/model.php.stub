@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Samik\LaravelAdmin\Models\BaseModel;
+
+class DummyClass extends BaseModel
+{
+    
+}

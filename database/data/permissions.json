@@ -1,0 +1,28 @@
+{
+    "Dashboard": [
+        "read"
+    ],
+    "System": [
+        "commands"
+    ],
+    "Setting": [
+        "_crud",
+        "setValue"
+    ],
+    "ApiResource": [
+        "_crud",
+        "test"
+    ],
+    "MenuItem": [
+        "_crud",
+        "reOrder"
+    ],
+    "User": [
+        "_crud",
+        "editProfile"
+    ],
+    "Role": [
+        "_crud",
+        "setPermissions"
+    ]
+}

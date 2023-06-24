@@ -1,0 +1,62 @@
+{
+    "name": "samiksengupta/laravel-admin",
+    "description": "A quick way to set up an admin panel, API endpoints and routing for a Laravel project",
+    "keywords": [
+        "samiksengupta",
+        "laravel-admin",
+        "laravel",
+        "admin"
+    ],
+    "homepage": "https://github.com/samiksengupta/laravel-admin",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Samik Sengupta",
+            "email": "samiksengupta@hotmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "doctrine/dbal": "^3.6",
+        "illuminate/support": "^9.0",
+        "spatie/laravel-html": "^3.2",
+        "tymon/jwt-auth": "^2.0",
+        "yajra/laravel-datatables-oracle": "^10.4"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Samik\\LaravelAdmin\\": "src"
+        },
+        "files": [
+            "src/Helpers/main.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Samik\\LaravelAdmin\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Samik\\LaravelAdmin\\LaravelAdminServiceProvider"
+            ],
+            "aliases": {
+                "LaravelAdmin": "Samik\\LaravelAdmin\\Facades\\LaravelAdmin"
+            }
+        }
+    }
+}

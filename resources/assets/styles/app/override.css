@@ -1,0 +1,95 @@
+.loader {
+    position: fixed;
+    /* Sit on top of the page content */
+    display: none;
+    /* Hidden by default */
+    width: 100%;
+    /* Full width (cover the whole page) */
+    height: 100%;
+    /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black background with opacity */
+    z-index: 2000;
+    /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer;
+    /* Add a pointer on hover */
+}
+
+.loader>.loader-text {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+.loader>.spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #f3f3f3;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.5s linear infinite;
+    animation: spin 0.5s linear infinite;
+    z-index: 999;
+    border-right: 16px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 16px solid rgba(255, 255, 255, 0.12);
+    border-left: 16px solid rgba(255, 255, 255, 0.12);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.ui-autocomplete { 
+    position: absolute; 
+    cursor: default;
+    z-index: 3000 !important;
+}
+
+a.dropdown-item {
+    cursor: pointer;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal.remote .modal-body{
+    padding: 0px;
+}
+
+.modal.remote .modal-body .card{
+    margin-bottom: 0px;
+}
+
+.modal-placeholder {
+    margin: 10px;
+}
+
+[class^='select2'] {
+    border-radius: 0px !important;
+}
+
+td {
+    vertical-align: middle !important;
+}

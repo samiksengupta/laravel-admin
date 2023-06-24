@@ -1,0 +1,75 @@
+.panel-heading {
+    padding: 10px;
+}
+
+.tester-heading {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: bold;
+}
+
+.tester-heading > i {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.api-method {
+    text-transform: uppercase;
+}
+
+.api-url {
+    font-weight: bold;
+}
+
+.input-btn {
+    margin-top: 0px;
+    border: 1px solid #22a7f0 !important;
+}
+input.path-param {
+    margin: 0px 2px 0px 0px;
+}
+
+label {
+    font-weight: 600;
+}
+
+pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#test-api-form .panel-body {
+    padding-top: 20px;
+}
+
+#test-api-form label.control-label {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 300;
+    text-align: left;
+    color: #5c5c5c;
+}
+
+#test-api-form .form-control {
+    border-radius: 0px;
+}
+
+#response-data.response-good {
+    border: 1px solid #0f0;
+}
+
+#response-data.response-bad {
+    border: 1px solid #f90;
+}
+
+#response-data.response-critical {
+    border: 1px solid #f00;
+}

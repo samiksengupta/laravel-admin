@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Login",
+        "method": "POST",
+        "route": "login",
+        "fields": "phone,password,role_id",
+        "secure": 0
+    },
+    {
+        "name": "Refresh",
+        "method": "POST",
+        "route": "refresh",
+        "fields": null,
+        "secure": 0
+    },
+    {
+        "name": "Logout",
+        "method": "POST",
+        "route": "logout",
+        "fields": null,
+        "secure": 1
+    },
+    {
+        "name": "User Details",
+        "method": "GET",
+        "route": "user-details",
+        "fields": null,
+        "secure": 1
+    }
+]

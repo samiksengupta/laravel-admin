@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Samik\LaravelAdmin\Http\Controllers\AdminModelController;
+
+class DummyClass extends AdminModelController
+{
+    
+}

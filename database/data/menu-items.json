@@ -1,0 +1,56 @@
+[
+    {
+        "text": "Dashboard",
+        "icon_class": "fas fa-tachometer-alt",
+        "path": "/",
+        "permission": "Dashboard.read"
+    },
+    {
+        "text": "User & Roles",
+        "icon_class": "fas fa-users",
+        "sub": [
+            {
+                "text": "Users",
+                "icon_class": "fas fa-user",
+                "path": "users",
+                "permission": "User.read"
+            },
+            {
+                "text": "Roles",
+                "icon_class": "fas fa-users",
+                "path": "roles",
+                "permission": "Role.read"
+            }
+        ]
+    },
+    {
+        "text": "System",
+        "icon_class": "fas fa-cog",
+        "sub": [
+            {
+                "text": "Settings",
+                "icon_class": "fas fa-cogs",
+                "path": "settings",
+                "permission": "Setting.read"
+            },
+            {
+                "text": "Menu",
+                "icon_class": "fas fa-bars",
+                "path": "menu-items",
+                "permission": "MenuItem.read"
+            },
+            {
+                "text": "Commands",
+                "icon_class": "fas fa-terminal",
+                "path": "commands",
+                "target": "_blank"
+            }
+        ]
+    },
+    {
+        "text": "API Resources",
+        "icon_class": "fas fa-code",
+        "path": "api-resources",
+        "permission": "ApiTest.read"
+    }
+]
