@@ -1,10 +1,21 @@
-# Very short description of the package
+# Laravel Admin
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/samiksengupta/laravel-admin.svg?style=flat-square)](https://packagist.org/packages/samiksengupta/laravel-admin)
 [![Total Downloads](https://img.shields.io/packagist/dt/samiksengupta/laravel-admin.svg?style=flat-square)](https://packagist.org/packages/samiksengupta/laravel-admin)
 ![GitHub Actions](https://github.com/samiksengupta/laravel-admin/actions/workflows/main.yml/badge.svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+A quick way to set up an admin panel, API endpoints and routing for a Laravel project. You can use this package to add the following features to your project.
+
+* A ready-to-go Admin Panel with User and Role management.
+* Base Class for your Models, Controllers and Policies that will automatically handle common functionalities for CRUD operations, DataTable response generation, Validation, UI Element customization and more.
+* Blade Views for Listing and Crud operations that are easily extendable on your project side.
+* Bootstrap UI with Javascript based form submissions, built on top of AdminLTE theme.
+* Easy to manage, Role based Permission system.
+* Auto-routing support.
+* Api Resource list and tester.
+* Easy to use custom commands that lets you create Laravel Admin compliant Models, Migrations, Controller, Policies, Permissions and Menu Items in one shot.
+* Everything can be overriden in your project for fine-tuned control.
+
 
 ## Installation
 
