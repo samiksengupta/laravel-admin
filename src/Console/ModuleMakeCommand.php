@@ -25,7 +25,7 @@ class ModuleMakeCommand extends Command
                 $permissions = ["_crud"];
                 $data = collect(\json_decode(\File::get($file)));
                 $data->put($moduleName, $permissions);
-                \File::put($file, $data->toJson());
+                \File::put($file, $data->toJson(JSON_PRETTY_PRINT));
 
                 if($this->option('seed')) {
                     $this->info("Seeding Permissions...");
@@ -43,7 +43,7 @@ class ModuleMakeCommand extends Command
                 $this->info("Generating Menu Items...");
                 $menuItems = [
                     [
-                        'text' => presentable($moduleName),
+                        'text' => presentable(Str::of($moduleName)->plural()),
                         'path' => Str::of($moduleName)->plural()->kebab(),
                         'permission' => "{$moduleName}.read"
                     ]
@@ -52,7 +52,7 @@ class ModuleMakeCommand extends Command
                 $insertIndex = $data->search(fn($item) => $item->text == 'System');
                 if($insertIndex) $data->splice($insertIndex, 0, $menuItems);
                 else $data->push($menuItems);
-                \File::put($file, $data->toJson());
+                \File::put($file, $data->toJson(JSON_PRETTY_PRINT));
 
                 if($this->option('seed')) {
                     $this->info("Seeding Menu Items...");
