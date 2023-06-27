@@ -35,7 +35,7 @@ After the package is installed in your project and you have configured your Data
 php artisan admin:install
 ```
 
-This is publish the required configuration, assets and seeders from this package to your project and run migrations and seeders.
+This will publish the required configuration, assets and seeders from this package to your project and run migrations and seeders.
 
 If you do not wish to publish the seeders and would rather create them yourself, you can use the `--empty` option when installing.
 
@@ -49,6 +49,8 @@ If you do not wish to re-install the Admin Panel to your project or want to forc
 php artisan admin:install --force
 ```
 
+Note: You may want to use the `--force` comamnd when publishing the default seeder files from this pacakge to your project as the `database/seeders/DatabaseSeeder` will need to be overwritten when setting up for the first time.
+
 #### Default Roles and Users
 
 By Default, Laravel Admin installs two Roles `Dev` and `Admin`. Dev is an unrestricted Role and ignores all permission settings (can access everything). Admin is given most administrative permissions not involving some super-level permissions that manages Admin Panel critical data such as deleting Settings and running Commands. Dev can grant Admin any permissions if they want and Admin can pass on whatever permission they have to any other new Roles that are created afterwards.
@@ -60,6 +62,18 @@ Role          | Username       | Password
 Developer     | dev            | 123456
 Administrator | admin          | 123456
 
+### Extending the Laravel Admin User Model
+
+A typical Laravel installation will come with it's own User model which will be used by the Auth facade by default. You may want to change the User model to extend the Laravel Admin's User Model:
+
+```
+namespace App\Models;
+
+class User extends \Samik\LaravelAdmin\Models\User
+{
+
+}
+```
 
 ### Creating Admin Panel Modules
 
@@ -104,6 +118,44 @@ If you run these commands, you can expect to have:
 * A `my-modules` route MenuItem entry in `database\data\menu-items.json`
 * A `MenuItem` Permission entry in `database\data\permissions.json`
 * Support for routes `my-modules`, `my-modules/{id}`, `my-modules/new`, `my-modules/{id}/edit`, `my-modules/{id}/delete` and more, if Auto Routing is enabled
+
+### Using the HasFileUploads Trait
+
+Laravel Admin comes with a Trait that automatically handles file uploads and deletions. Use the `Samik\LaravelAdmin\Traits\HasFileUploads` trait in your model and specify the location where files will be stored, and the model will store the file upon being created. Upon being deleted or updated, the older stored files will be deleted as well.
+
+```
+namespace App\Models;
+
+use Samik\LaravelAdmin\Models\BaseModel;
+use Samik\LaravelAdmin\Traits\HasFileUploads;
+
+class MyModel extends BaseModel
+{
+    // use the trait
+    use HasFileUploads;
+
+    // specify the upload field
+    protected $uploadFields = ['myfile' => ['folder' => 'my-models', 'disk' => 'public']];
+
+    // specify the field type options for form generation and value display (optional)
+    public static function elements()
+    {
+        return [
+            'myfile' => [
+                'type' => 'file',,
+                'displayAs' => 'image'
+            ],
+        ];
+    }
+}
+```
+In this example, the model will expect a field input named 'myfile' as part of the request. Base64 encoded fields will also be handled by this trait. In the `$uploadFields` configuration if a folder is not specified, a folder named `uploads` will be assumed. All files that are uploaded will be stored in a sub-folder inside the specified folder grouped by the current Year and Month to make folder navigation easier.
+
+If the file gets uploaded but you cannot access it via urls, try to generate the symbolic links:
+
+```bash
+php artisan storage:link
+```
 
 ### Testing
 
