@@ -64,10 +64,12 @@ class AdminModelController extends AdminBaseController
             $this->authorize('update', $this->model);
             $data = $this->model::findOrFail($id);
             $this->viewData['title'] = "Editing {$this->viewData['title']} : {$data->label()}";
+            $this->viewData['data'] = $data;
         }
         else {
             $this->authorize('create', $this->model);
             $this->viewData['title'] = "Creating {$this->viewData['title']}";
+            $this->viewData['data'] = null;
         }
 
         $this->viewData['form'] = $this->model::getFormData($id, $this->viewData['apiCreateUrl'], $this->viewData['apiUpdateUrl']);
@@ -86,7 +88,6 @@ class AdminModelController extends AdminBaseController
         $data = $this->model::getViewData($id);
         $this->viewData['title'] = "Viewing {$this->viewData['title']} : {$data->label()}";
         $this->viewData['editUrl'] = str_replace('$1', $id, $this->viewData['editUrl']);
-        // $this->viewData['data'] = $data->toArray();
         $this->viewData['data'] = $data;
         return \view()->exists("laravel-admin::contents/{$this->model::uriName()}/data") ? view("laravel-admin::contents/{$this->model::uriName()}/data", $this->viewData) : view('laravel-admin::contents/generic/data', $this->viewData);
     }
@@ -103,6 +104,7 @@ class AdminModelController extends AdminBaseController
         $data = $this->model::findOrFail($id);
         $this->viewData['title'] = "Are you sure you want to delete {$this->viewData['title']} : {$data->label()}";
         $this->viewData['apiDeleteUrl'] = str_replace('$1', $id, $this->viewData['apiDeleteUrl']);
+        $this->viewData['data'] = $data;
         return \view()->exists("laravel-admin::contents/{$this->model::uriName()}/delete") ? view("laravel-admin::contents/{$this->model::uriName()}/delete", $this->viewData) : view('laravel-admin::contents/generic/delete', $this->viewData);
     }
 
