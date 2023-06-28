@@ -1,17 +1,15 @@
-@php $element = $element ?? $form['elements'][$key] @endphp
-@if($element['label']) {{ html()->label($element['label'])->for($key)->class('col-form-label') }} @endif
-@if(\is_array($element['value']))
-    @php $element['value'] = collect($element['value'])->toJson() @endphp
-@endif
 @php
+    $element = $element ?? $form['elements'][$key];
     $attributes = [
         'class' => 'form-control rounded-0' . ' ' .($element['attr']['class'] ?? ''), 
         'placeholder' =>  ($element['attr']['placeholder'] ?? $element['label']),
         'aria-invalid' =>  'false',
         'aria-describedby' =>  $key . '-error',
-        'data-default' => $element['value'], 
+        'data-default' => \is_string($element['value']) ? $element['value'] : (\is_array($element['value']) ? collect($element['value'])->toJson() : ''),
     ] + $element['attr'];
+    $element['value'] = ($element['serializeValue'] ?? false) && \is_array($element['value']) ? collect($element['value'])->toJson() : $element['value'];
 @endphp
+@if($element['label']) {{ html()->label($element['label'])->for($key)->class('col-form-label') }} @endif
 @switch($element['type'])
     @case('month')
     @php $options = collect(range(1, 12))->mapWithKeys(fn($m) => [$m => \Carbon\Carbon::createFromFormat('m', $m)->format('F')]) @endphp
