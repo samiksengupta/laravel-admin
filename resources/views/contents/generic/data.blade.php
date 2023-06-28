@@ -12,6 +12,7 @@
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0 rounded-0">
                     @include('laravel-admin::partials.data-gen')
+                    @yield('additional-content')
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer rounded-0">

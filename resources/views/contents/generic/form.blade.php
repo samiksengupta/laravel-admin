@@ -12,6 +12,7 @@
                 <!-- /.card-header -->
                 <div class="card-body rounded-0">
                     @include('laravel-admin::partials.form-gen')
+                    @yield('additional-content')
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer rounded-0">

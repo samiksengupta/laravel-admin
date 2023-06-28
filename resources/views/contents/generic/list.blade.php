@@ -8,7 +8,7 @@
                     <h3 class="card-title float-left row justify-content-center align-self-center">{{ $title }}</h3>
                     @if($showPageAction ?? false)
                     <div class="float-right page-action">
-                        {{-- <button type="button" class="btn btn-default">Advanced Search</button> --}}
+                        @yield('additional-page-actions')
                         {!! build_action_html($model::pageActions(), null, "{$modelName} Action"); !!}
                     </div>
                     @endif
@@ -48,5 +48,5 @@
 @endsection
 @section('page-scripts')
 @include('laravel-admin::partials.scripts-datatables')
-@yield('scripts')
+@yield('additional-scripts')
 @endsection
