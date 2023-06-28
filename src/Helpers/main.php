@@ -541,27 +541,6 @@ if (!function_exists('build_action_html')) {
     }
 }
 
-if(!function_exists('send_msg91_broadcast')) {
-    // sends a broadcast using msg91
-    function send_msg91_broadcast($phones, $message) {
-        $recipients = [];
-        foreach($phones as $phone) {
-            $recipients[] = [
-                'mobiles' => $phone,
-                'VAR1' => $message,
-            ];
-        }
-
-        $response = Http::post('https://api.msg91.com/api/v5/flow/', [
-            'flow_id' => env('MSG91_BROADCAST_FLOW_ID'),
-            'mobiles' => $phone,
-            'recipients' => $recipients
-        ]);
-
-        return ($response->json()['type'] === 'error') ? false : true;
-    }
-}
-
 if(!function_exists('action_exists')) {
     function action_exists($action) {
         try {
@@ -603,6 +582,32 @@ if(!function_exists('get_api_action_callable')) {
         ];
         foreach($namespaces as $namespace) if($callable = class_exists("{$namespace}\\{$controller}") ? "{$namespace}\\{$controller}@{$method}" : null) return $callable;
         return null;
+    }
+}
+
+if (!function_exists('flat_ancestors')) {
+    function flat_ancestors($model, $nestedProperty = 'parent')
+    {
+        $result = [];
+        if ($model->{$nestedProperty}) {
+            $result[] = $model->{$nestedProperty};
+            $result = array_merge($result, flat_ancestors($model->{$nestedProperty}, $nestedProperty));
+        }
+        return $result;
+    }
+}
+
+if (!function_exists('flat_descendants')) {
+    function flat_descendants($model, $nestedProperty = 'children')
+    {
+        $result = [];
+        foreach ($model->{$nestedProperty} as $child) {
+            $result[] = $child;
+            if ($child->{$nestedProperty}) {
+                $result = array_merge($result, flat_descendants($child, $nestedProperty));
+            }
+        }
+        return $result;
     }
 }
 
