@@ -43,7 +43,7 @@ class ModuleMakeCommand extends Command
                 $this->info("Generating Menu Items...");
                 $menuItems = [
                     [
-                        'text' => presentable(Str::of($moduleName)->plural()),
+                        'text' => Str::of(title($moduleName))->plural(),
                         'path' => Str::of($moduleName)->plural()->kebab(),
                         'permission' => "{$moduleName}.read"
                     ]
