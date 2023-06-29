@@ -418,7 +418,7 @@ if (!function_exists('download_url')) {
     // Tries to return a download link to file
     function download_url($path)
     {
-        return url("download/public/{$path}");
+        return admin_url("download/public/{$path}");
     }
 }
 
