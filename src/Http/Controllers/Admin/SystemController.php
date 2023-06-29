@@ -117,6 +117,16 @@ class SystemController extends AdminBaseController
         return $commands;
     }
 
+    public function downloadStoredFile(Request $request, $file)
+    {
+        return Storage::download("downloads/{$file}");
+    }
+
+    public function downloadPublicFile(Request $request, $file)
+    {
+        return Storage::download("public/{$file}");
+    }
+
     public function viewDashboard(Request $request)
     {
         $this->viewData['title'] = 'Dashboard';
@@ -165,15 +175,5 @@ class SystemController extends AdminBaseController
         $this->authorize('delete', MenuItem::class);
         MenuItem::deleteAt($id);
         return response()->json(['message' => "Menu Item was Deleted successfully! Please refresh to see changes.", 'menu' => MenuItem::hierarchy()->get()->toJson()], 200);
-    }
-
-    public function downloadStoredFile(Request $request, $file)
-    {
-        return Storage::download("downloads/{$file}");
-    }
-
-    public function downloadPublicFile(Request $request, $file)
-    {
-        return Storage::download("public/{$file}");
     }
 }
