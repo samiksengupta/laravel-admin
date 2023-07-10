@@ -25,26 +25,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use HasApiTokens, HasFactory, Notifiable;
 
-    const CSV_CUSTOM_INDEX_DISTRICT_NAME = 0;
-    const CSV_CUSTOM_INDEX_MUNICIPALITY_NAME = 1;
-    const CSV_CUSTOM_INDEX_WARD_NUMBER = 2;
-    const CSV_CUSTOM_INDEX_HTH_SUPERVISOR_NAME = 3;
-    const CSV_CUSTOM_INDEX_HTH_SUPERVISOR_PHONE = 4;
-    const CSV_CUSTOM_INDEX_HTH_TEAM_NUMBER = 5;
-    const CSV_CUSTOM_INDEX_ESTIMATED_POPULATION = 6;
-    const CSV_CUSTOM_INDEX_ESTIMATED_HOUSEHOLDS = 7;
-    const CSV_CUSTOM_INDEX_HTH_WORKER1_TYPE = 8;
-    const CSV_CUSTOM_INDEX_HTH_WORKER1_NAME = 9;
-    const CSV_CUSTOM_INDEX_HTH_WORKER1_PHONE = 10;
-    const CSV_CUSTOM_INDEX_HTH_WORKER2_TYPE = 11;
-    const CSV_CUSTOM_INDEX_HTH_WORKER2_NAME = 12;
-    const CSV_CUSTOM_INDEX_HTH_WORKER2_PHONE = 13;
-    const CSV_CUSTOM_INDEX_VCT_TEAM_NUMBER = 14;
-    const CSV_CUSTOM_INDEX_VCT_SUPERVISOR_NAME = 15;
-    const CSV_CUSTOM_INDEX_VCT_SUPERVISOR_PHONE = 16;
-    const CSV_CUSTOM_INDEX_VCT_WORKER_NAME = 17;
-    const CSV_CUSTOM_INDEX_VCT_WORKER_PHONE = 18;
-
     /**
      * The attributes that are mass assignable.
      *
