@@ -21,7 +21,6 @@ class CrudPolicy
 
     public function read(User $user)
     {
-        dd($user);
         return is_policy_authorized($this, __FUNCTION__, $user->role_id);
     }
 
