@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -490,7 +491,7 @@ if (!function_exists('query_to_options')) {
         $keyColumn = $keyColumn ?? $model::keyName();
         $valueColumn = $valueColumn ?? $model::labelName();
         $collection = $builder->pluck($valueColumn, $keyColumn);
-        if($prepend) $collection->prepend('Select...', '');
+        $collection = prepend_to_options($collection, $prepend);
         return $collection;
     }
 }
@@ -499,11 +500,28 @@ if (!function_exists('array_to_options')) {
     // Make key value paired options array from a simple array
     function array_to_options($array, $formatDisplay = true, $prepend = false)
     {
-        $collection = collect($array)->mapWithKeys(function ($item, $key) use($formatDisplay) {
-            $display = $formatDisplay ? presentable($item) : $item;
-            return [$item => $display];
+        $collection = collect($array)->mapWithKeys(function ($item, $itemKey) use($formatDisplay) {
+            $key = is_string($item) ? $item : $item['key'] ?? $itemKey;
+            $display = is_string($item) ? $item : $item['display'] ?? $item['key'] ?? $itemKey;
+            $display = $formatDisplay ? presentable($display) : $display;
+            return [$key => $display];
         });
-        if($prepend) $collection->prepend('Select...', '');
+        $collection = prepend_to_options($collection, $prepend);
+        return $collection;
+    }
+}
+
+if (!function_exists('prepend_to_options')) {
+    function prepend_to_options($collection, $prepend = false)
+    {
+        if($prepend) {
+            if($collection instanceof Collection || is_array($collection)) {
+                $collection = is_array($collection) ? collect($collection) : $collection;
+                if(is_string($prepend)) $collection->prepend($prepend, '');
+                else if(is_array($prepend)) foreach(array_reverse($prepend) as $key => $display) $collection->prepend($display, $key);
+                else $collection->prepend('Select...', '');
+            }
+        }
         return $collection;
     }
 }
@@ -608,6 +626,21 @@ if (!function_exists('flat_descendants')) {
             }
         }
         return $result;
+    }
+}
+
+if (!function_exists('random_code')) {
+    function random_code(int $length = 8, string $keyspace = '0123456789ABCDEFGHIJKLMNOPQRSTYZ')
+    {
+        if ($length < 1) {
+            throw new \RangeException("Length must be a positive integer");
+        }
+        $pieces = [];
+        $max = mb_strlen($keyspace, '8bit') - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $pieces[] = $keyspace[random_int(0, $max)];
+        }
+        return implode('', $pieces);
     }
 }
 
