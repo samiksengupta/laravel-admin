@@ -23,7 +23,7 @@ class LaravelAdminInstallCommand extends Command
             
             // publish assets
             $this->info("Publishing assets...");
-            $this->call('vendor:publish', ['--tag' => 'assets', '--force' => $this->option('force'), '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $this->call('vendor:publish', ['--tag' => 'assets', '--force' => true, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             
             // run migrations
             $this->info("Running migrations...");

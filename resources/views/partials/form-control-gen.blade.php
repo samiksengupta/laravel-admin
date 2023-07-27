@@ -92,6 +92,10 @@
     @case('number')
     {{ html()->number($key)->value($element['value'])->attributes($attributes) }}
     @break
+    @case('tags')
+    @php $attributes['class'] .= ' tags' @endphp
+    {{ html()->text($key)->value($element['value'])->attributes($attributes) }}
+    @break
     @case('price')
         @php $currency = setting('app.currency') @endphp
         @php $attributes['class'] .= ' price' @endphp
