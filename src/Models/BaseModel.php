@@ -881,6 +881,11 @@ abstract class BaseModel extends Model
 
         $rawColumns = ['_action'];
         foreach(static::elements() as $key => $element) {
+            // overwrite values with any datatable accessor present in the model
+            $accessor = sprintf('get%sDataTableAttribute', Str::of($key)->studly());
+            if(\method_exists(\get_called_class(), $accessor)) $datatable->editColumn($key, fn($row) => $row->{$accessor}());
+
+            // overwrite values for file/files type and options
             if(isset($element['type']) && $element['type'] === 'file' && isset($element['displayAs'])) {
                 switch($element['displayAs']) {
                     case 'url': 
