@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "doctrine/dbal": "^3.6",
-        "illuminate/support": "^9.0",
+        "illuminate/support": "^9.0|^10.0",
         "spatie/laravel-html": "^3.2",
         "tymon/jwt-auth": "^2.0",
         "yajra/laravel-datatables-oracle": "^10.4"
