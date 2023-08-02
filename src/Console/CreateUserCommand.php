@@ -18,7 +18,7 @@ class CreateUserCommand extends Command
 
         $this->info("Installing LaravelAdmin...");
         try {
-            $role = \Samik\LaravelAdmin\Models\Role::where('id', $this->argument('role'))->orWhere('name', 'Admin')->first();
+            $role = \Samik\LaravelAdmin\Models\Role::where('id', $this->argument('role'))->orWhere('name', $this->argument('role'))->first();
             if($role) {
                 $user = null;
                 do {
