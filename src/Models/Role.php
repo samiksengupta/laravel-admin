@@ -40,7 +40,7 @@ class Role extends BaseModel
 
     public function scopeVisible($query)
     {
-        return $query->where('level', '>=', Auth::user()->role->level);
+        return $query->where('level', '>=', (auth_user()->role->level ?? 0));
     }
 
     public static function elements()
@@ -51,8 +51,8 @@ class Role extends BaseModel
             ],
             'level' => [
                 'type' => 'number',
-                'attr' => ['min' => Auth::user()->role->level],
-                'value' => Auth::user()->role->level + 1,
+                'attr' => ['min' => (auth_user()->role->level ?? 0)],
+                'value' => (auth_user()->role->level ?? 0) + 1,
                 'required' => true,
             ],
         ];
