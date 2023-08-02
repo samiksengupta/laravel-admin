@@ -42,7 +42,7 @@ trait HasFileUploads
                     $this->attributes[$field] = $this->getOriginal($field);
                 }
             }
-            else $this->attributes[$field] = $this->getOriginal($field);
+            else $this->attributes[$field] = $this->attributes[$field] ?? $this->getOriginal($field);
         }
     }
 
