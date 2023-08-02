@@ -37,34 +37,42 @@ php artisan admin:install
 
 This will publish the required configuration, assets and seeders from this package to your project and run migrations and seeders.
 
-If you do not wish to publish the seeders and would rather create them yourself, you can use the `--empty` option when installing.
+If you do not wish to run the seeders and would rather do it manually, you can use the `--empty` option when installing.
 
 ```bash
 php artisan admin:install --empty
 ```
 
-If you do not wish to re-install the Admin Panel to your project or want to forcibly overwrite all files, you may use the `--force` option when installing.
+If you wish to forcibly overwrite all files, you may use the `--force` option when installing.
 
 ```bash
 php artisan admin:install --force
 ```
 
-Note: You may want to use the `--force` comamnd when publishing the default seeder files from this pacakge to your project as the `database/seeders/DatabaseSeeder` will need to be overwritten when setting up for the first time.
+If you have recently updated Laravel Admin package, you may use the `--update` option when installing. This will only overwrite assets and seeders and skip some options entirely.
+
+```bash
+php artisan admin:install --update
+```
+
+Note: If you are not using the `--update` option when installing, you will be prompted to replace the `database/seeders/DatabaseSeeder` with the one that comes with LaravelAdmin. It is recommend you do this when installing Laravel Admin for the first time, as it will make running seeders easier with the `php artisan db:seed` command.
 
 #### Default Roles and Users
 
 By Default, Laravel Admin installs two Roles `Dev` and `Admin`. Dev is an unrestricted Role and ignores all permission settings (can access everything). Admin is given most administrative permissions not involving some super-level permissions that manages Admin Panel critical data such as deleting Settings and running Commands. Dev can grant Admin any permissions if they want and Admin can pass on whatever permission they have to any other new Roles that are created afterwards.
 
-Default Users are also created for initital login. The following credentials can be used to login as one of these Roles.
+If you did not use the `--empty` option when installing, a default `Dev` User is also created for initital login. The following credentials can be used to login.
 
 Role          | Username       | Password
 | :---        | :---           | :---
 Developer     | dev            | 123456
-Administrator | admin          | 123456
 
-### Extending the Laravel Admin User Model
+Under the same install conditions, you will be asked if you want to create an `Admin` user if none exists. If you proceed, the basic user data will need to be provided to continue.
 
-A typical Laravel installation will come with it's own User model which will be used by the Auth facade by default. You may want to change the User model to extend the Laravel Admin's User Model:
+#### Extending the Laravel Admin User Model and generating a Policy
+When not installing with the `--update` option, the install script will automatically try to set the default Laravel User Model (`App\Models\User`) as a child to the User Model (`Samik\LaravelAdmin\Models\User`) provided by Laravel Admin and then generate a Policy for this User model. If this process fails for some reason, you will need to do this manually and also generate a Policy for everything to work seamlessly. 
+
+To do this, you can change the User model to extend the Laravel Admin's User Model:
 
 ```
 namespace App\Models;
@@ -72,6 +80,25 @@ namespace App\Models;
 class User extends \Samik\LaravelAdmin\Models\User
 {
 
+}
+```
+
+And then generate an UserPolicy with the following command:
+
+```bash
+php artisan make:xpolicy UserPolicy
+```
+
+If the `App\Policies\UserPolicy` somehow exists before this, it won't get created or replaced. You will then need to ensure that the policy class extends Laravel Admin's Crud Policy (`Samik\LaravelAdmin\Policies\CrudPolicy`) class:
+
+```
+namespace App\Policies;
+
+use Samik\LaravelAdmin\Policies\CrudPolicy;
+
+class UserPolicy extends CrudPolicy
+{
+    
 }
 ```
 
