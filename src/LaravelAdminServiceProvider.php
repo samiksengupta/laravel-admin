@@ -4,12 +4,16 @@ namespace Samik\LaravelAdmin;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Router;
 
+use Samik\LaravelAdmin\Console\CreateUserCommand;
 use Samik\LaravelAdmin\Console\ModuleMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedModelMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedControllerMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedPolicyMakeCommand;
 use Samik\LaravelAdmin\Console\LaravelAdminInstallCommand;
+
+use Samik\LaravelAdmin\Http\Middlewares\Authenticate;
 
 class LaravelAdminServiceProvider extends ServiceProvider
 {
@@ -52,8 +56,17 @@ class LaravelAdminServiceProvider extends ServiceProvider
 
             // Publishing seeds.
             $this->publishes([
-                __DIR__.'/../database/seeders' => database_path('seeders'),
+                __DIR__.'/../database/seeders/SettingSeeder.php' => database_path('seeders/SettingSeeder.php'),
+                __DIR__.'/../database/seeders/PermissionSeeder.php' => database_path('seeders/PermissionSeeder.php'),
+                __DIR__.'/../database/seeders/ApiResourceSeeder.php' => database_path('seeders/ApiResourceSeeder.php'),
+                __DIR__.'/../database/seeders/MenuItemSeeder.php' => database_path('seeders/MenuItemSeeder.php'),
+                __DIR__.'/../database/seeders/SpamSeeder.php' => database_path('seeders/SpamSeeder.php'),
+                __DIR__.'/../database/seeders/UserSeeder.php' => database_path('seeders/UserSeeder.php'),
             ], 'seeders');
+
+            $this->publishes([
+                __DIR__.'/../database/seeders/DatabaseSeeder.php' => database_path('seeders/DatabaseSeeder.php'),
+            ], 'database-seeder');
 
             // Publishing seed data.
             $this->publishes([
@@ -62,6 +75,7 @@ class LaravelAdminServiceProvider extends ServiceProvider
 
             // Registering package commands.
             $this->commands([
+                CreateUserCommand::class,
                 ModuleMakeCommand::class,
                 ExtendedModelMakeCommand::class,
                 ExtendedControllerMakeCommand::class,
@@ -79,6 +93,10 @@ class LaravelAdminServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-admin');
         $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
+        
+        // Set admin.auth middleware alias
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('admin.auth', Authenticate::class);
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-admin', function () {

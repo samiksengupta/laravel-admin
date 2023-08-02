@@ -10,7 +10,7 @@ Route::get('/', function () {
 // admin web routes
 Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => config('laravel-admin.web_middlewares')], function()
 {
-    Route::group(['before' => 'auth', 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
+    Route::group(['before' => 'admin.auth', 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
     {
         // command panel
         Route::get('commands', 'SystemController@viewCommands');
@@ -36,7 +36,7 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
     });
     
     // Closed API routes that are Protected and Throttled to 120 hits / min with a 1 min ban
-    Route::group(['middleware' => ['auth'], 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
+    Route::group(['middleware' => ['admin.auth'], 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
     {
         // dashboard
         Route::get('/', 'SystemController@viewDashboard');
