@@ -10,6 +10,7 @@ $(function () {
     initDateTime();
     initDateRange();
     initDateTimeRange();
+    initSummernote();
     initSwalToast();
     initJqueryForm();
     initAjaxUrlHandler();
@@ -74,7 +75,7 @@ function initDate() {
             next: 'fas fa-arrow-circle-right',
             today: 'far fa-calendar-check-o',
             clear: 'fas fa-trash',
-            close: 'far fa-times' 
+            close: 'far fa-times'
         }
     });
 }
@@ -91,7 +92,7 @@ function initDateTime() {
             next: 'fas fa-arrow-circle-right',
             today: 'far fa-calendar-check-o',
             clear: 'fas fa-trash',
-            close: 'far fa-times' 
+            close: 'far fa-times'
         }
     });
 }
@@ -104,7 +105,7 @@ function initDateRange() {
         }
     };
 
-    $('.daterange').daterangepicker(options, function(start, end) {
+    $('.daterange').daterangepicker(options, function (start, end) {
         $('.daterange').val(`${start.format(dateFormat)} - ${end.format(dateFormat)}`);
     });
 }
@@ -121,9 +122,13 @@ function initDateTimeRange() {
         }
     };
 
-    $('.datetimerange').daterangepicker(options, function(start, end) {
+    $('.datetimerange').daterangepicker(options, function (start, end) {
         $('.datetimerange').val(`${start.format(dateTimeFormat)} - ${end.format(dateTimeFormat)}`);
     });
+}
+
+function initSummernote() {
+    $('.summernote').summernote();
 }
 
 // inits SWAL2 toast
@@ -146,14 +151,14 @@ function showAlert(form, errors) {
 
     for (fieldKey in errors) {
         let fieldName = fieldKey;
-        if(fieldName.includes('.')) {
+        if (fieldName.includes('.')) {
             let f = fieldName.split(".");
-            fieldName = f.map(function(field, i) { return i > 0 ? `[${field}]` : field; }).join('');
+            fieldName = f.map(function (field, i) { return i > 0 ? `[${field}]` : field; }).join('');
         }
         let field = form.find(`[name="${fieldName}"]`);
         field.prop('aria-invalid', true)
         field.addClass('is-invalid');
-        
+
         let fieldErrors = errors[fieldKey];
         let errorSpan = form.find(`#${fieldName}-error`);
         errorSpan.html(fieldErrors.join("</br>"));
@@ -172,7 +177,7 @@ function clearAlert(form) {
         let field = $(this);
         field.removeClass('is-invalid');
         field.prop('aria-invalid', false)
-        
+
         let errorSpan = $(`#${field.attr('aria-describedby')}`);
         errorSpan.html('');
     })
@@ -192,19 +197,19 @@ function initJqueryForm(targetForm = '.ajax-form', successCallback = null, error
             return true;
         },
         success: function (response, status) {
-            if(ok(response.message)) toastSuccess(response.message);
-            if(successCallback) successCallback(response, status);
-            else if(ok(response.navigate)) navigate(response.navigate, ok(response.timeout) ? response.timeout : defaultTimeOut);
+            if (ok(response.message)) toastSuccess(response.message);
+            if (successCallback) successCallback(response, status);
+            else if (ok(response.navigate)) navigate(response.navigate, ok(response.timeout) ? response.timeout : defaultTimeOut);
         },
         error: function (jqXHR) {
             let response = jqXHR.responseJSON;
-            if(ok(response.message) && response.message) toastError(response.message);
+            if (ok(response.message) && response.message) toastError(response.message);
             else toastError(`Your request failed. Server responded with code: ${jqXHR.status}`);
             let errors = response.errors;
             if (ok(errors)) {
                 showAlert(form, errors);
             }
-            if(errorCallback) errorCallback(response, jqXHR.status);
+            if (errorCallback) errorCallback(response, jqXHR.status);
         }
     };
 
@@ -213,10 +218,10 @@ function initJqueryForm(targetForm = '.ajax-form', successCallback = null, error
     cc(targetForm, 'Ajax Form initialized');
 
     form.find('#cancel-button').click(function () {
-        if(cancelCallback) cancelCallback();
+        if (cancelCallback) cancelCallback();
         else {
             let cancelUrl = $(this).data('url');
-            if(cancelUrl) navigate(cancelUrl, 100);
+            if (cancelUrl) navigate(cancelUrl, 100);
         }
     })
 }
@@ -250,16 +255,16 @@ function initModal(successCallback) {
         // load content from value of data-remote url
         modal.find('.modal-title').text(button.data("title"));
         modal.find('.modal-body').html('<div class="d-flex justify-content-center modal-placeholder"><h1><i class="fas fa-sync"></i>&nbsp;Loading...</h1></div>');
-        if(remoteUrl) {
-            modal.find('.modal-body').load(`${remoteUrl}`, function (response, status, xhr) {					
-                if(status == 'error') {
+        if (remoteUrl) {
+            modal.find('.modal-body').load(`${remoteUrl}`, function (response, status, xhr) {
+                if (status == 'error') {
                     cc(status, xhr);
                     modal.find('.modal-body').html(response);
                 }
                 else {
                     initJqueryForm('.ajax-form', function (response, status) {
                         modal.modal('toggle');
-                        if(successCallback) successCallback(response);
+                        if (successCallback) successCallback(response);
                     }, null, function () {
                         modal.modal('toggle');
                     });
@@ -268,6 +273,7 @@ function initModal(successCallback) {
                     initSelect2();
                     initInputMask();
                     initDateRange();
+                    initSummernote();
                 }
             });
         }

@@ -22,6 +22,8 @@
 <script src="{{ admin_asset_url('plugins/daterangepicker/daterangepicker.js') }}"></script>
 <!-- SweetAlert2 -->
 <script src="{{ admin_asset_url('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+<!-- summernote -->
+<script src="{{ admin_asset_url('plugins/summernote/summernote-bs4.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ admin_asset_url('dist/js/adminlte.min.js') }}"></script>
 <!-- AdminLTE for demo purposes -->

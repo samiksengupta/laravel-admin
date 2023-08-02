@@ -83,6 +83,9 @@
     @case('textarea')
     {{ html()->textarea($key)->value($element['value'])->attributes($attributes) }}
     @break
+    @case('richtextarea')
+    {{ html()->textarea($key)->value($element['value'])->attributes($attributes)->class('summernote') }}
+    @break
     @case('password')
     {{ html()->password($key)->attributes($attributes) }}
     @break
