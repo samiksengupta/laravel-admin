@@ -16,7 +16,6 @@ class ApiResourceSeeder extends Seeder
      */
     public function run()
     {
-        $this->truncate();
         $this->createApiResources($this->apiResources());
     }
 
@@ -24,23 +23,17 @@ class ApiResourceSeeder extends Seeder
     {
         foreach ($structure as $apiResource) {
             $apiResource = (object) $apiResource;
-            ApiResource::create([
-                'name' => $apiResource->name,
+            ApiResource::updateOrCreate([
                 'method' => $apiResource->method,
-                'route' => $apiResource->route,
+                'route' => $apiResource->route
+            ],[
+                'name' => $apiResource->name,
                 'fields' => $apiResource->fields,
                 'secure' => $apiResource->secure,
                 'hidden' => 0,
                 'disabled' => 0
             ]);
         }
-    }
-
-    private function truncate() 
-    {
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        ApiResource::truncate();
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 
     private function apiResources()

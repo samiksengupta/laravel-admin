@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         
         if(config('app.env') === 'local') {
-            
+            // seeders to run in local environment
         }
     }
 }

@@ -10,6 +10,8 @@ use Samik\LaravelAdmin\Models\Permission;
 
 class UserSeeder extends Seeder
 {
+    protected $roleDev;
+    protected $roleAdmin;
     /**
      * Run the database seeds.
      *
@@ -17,51 +19,41 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $this->createDefaultRoles();
         $this->createDefaultUsers();
     }
 
-    private function createDefaultUsers()
+    private function createDefaultRoles()
     {
-        // developer group and default permissions
-        $developer = Role::create([
+        // developer role and default permissions
+        $this->roleDev = Role::firstOrCreate([
             'name' => 'Dev',
             'level' => 0,
             'unrestricted' => 1
         ]);
-
-        // default dev user
-        $user = User::create([
-            'email' => 'dev@laravel.admin',
-            'username' => 'dev',
-            'password' => '123456',
-            'name' => 'Developer',
-            'phone' => null,
-        ]);
-        $user->role()->associate($developer)->save();
-
-        // admin group and default permissions
-        $admin = Role::create([
+        
+        // administrator role and default permissions
+        $this->roleAdmin = Role::firstOrCreate([
             'name' => 'Admin',
             'level' => 1,
             'unrestricted' => 0
         ]);
 
         $exceptions = ['System.commands', 'Setting.create', 'Setting.update', 'Setting.delete', 'MenuItem.create', 'MenuItem.update', 'MenuItem.delete'];
-        $permissions = Permission::all();
-        foreach($permissions as $permission) {
-            if(\in_array($permission->action, $exceptions)) continue;
-            $admin->permissions()->attach($permission->id);
-        }
+        $this->roleAdmin->permissions()->syncWithoutDetaching(Permission::whereNotIn('action', $exceptions)->pluck('id'));
+    }
 
-        // default admin user
-        $user = User::create([
-            'email' => 'admin@laravel.admin',
-            'username' => 'admin',
-            'password' => '123456',
-            'name' => 'Administrator',
-            'phone' => null,
-        ]);
-        $user->role()->associate($admin)->save();
-        
+    private function createDefaultUsers()
+    {
+        if($this->roleDev && $this->roleDev->users()->doesntExist()) {
+            // default dev user
+            $this->roleDev->users()->save(User::create([
+                'email' => 'dev@laravel.admin',
+                'username' => 'dev',
+                'password' => '123456',
+                'name' => 'Developer',
+                'phone' => null,
+            ]));
+        }
     }
 }

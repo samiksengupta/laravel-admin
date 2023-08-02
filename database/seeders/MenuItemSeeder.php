@@ -28,7 +28,7 @@ class MenuItemSeeder extends Seeder
             $item = (object) $item;
             $permission = isset($item->permission) ? Permission::where('action', $item->permission)->first() : null;
             
-            // generate menu
+            // generate menu item
             $menuItem = new MenuItem();
             $menuItem->parent_id = $parentId;
             $menuItem->text = $item->text ?? null;
@@ -39,7 +39,7 @@ class MenuItemSeeder extends Seeder
             $menuItem->target = $item->target ?? '_self';
             $saved = $menuItem->save();
             
-            // generate submenu
+            // generate submenu items
             $hasSub = (isset($item->sub) && is_array($item->sub) && count($item->sub));
             if($saved && $hasSub) {
                 $this->createMenuItems($item->sub, $menuItem->id);
