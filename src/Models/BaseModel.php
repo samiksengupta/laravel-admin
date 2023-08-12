@@ -1023,7 +1023,8 @@ abstract class BaseModel extends Model
             foreach($displayElements as $elementKey) {
                 $element = $elements[$elementKey];
                 $element['type'] = $element['type'] ?? 'text';
-                $element['label'] = $element['label'] ?? title($elementKey);
+                if($element['type'] !== 'hidden') $element['label'] = $element['label'] ?? title($elementKey);
+                else if($element['label'] ?? false) $element['label'] = $element['label'];
                 $element['value'] = $data[$elementKey] ?? ($element['value'] ?? null);
                 $element['attr'] = $element['attr'] ?? [];
                 switch($element['type']) {
