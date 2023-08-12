@@ -1,6 +1,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base id="base-url" href="{{ url('/') }}" target="_blank">
+    <base id="api-url" href="{{ url('api') }}" target="_blank">
+    <base id="api-admin-url" href="{{ api_admin_url('/') }}" target="_blank">
     <link rel="icon" href="{{ admin_asset_url('favicon.ico') }}">
     <title>{{ setting('app.title') }} | {{ $title }}</title>
 
