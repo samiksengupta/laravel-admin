@@ -2,6 +2,7 @@
 
 namespace Samik\LaravelAdmin\Policies;
 
+use Samik\LaravelAdmin\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SystemPolicy extends CrudPolicy

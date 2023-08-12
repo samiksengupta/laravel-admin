@@ -2,6 +2,7 @@
 
 namespace Samik\LaravelAdmin\Policies;
 
+use Samik\LaravelAdmin\Models\User;
 use Samik\LaravelAdmin\Models\ApiResource;
 use Illuminate\Auth\Access\HandlesAuthorization;
 

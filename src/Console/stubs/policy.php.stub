@@ -3,6 +3,7 @@
 namespace DummyNamespace;
 
 use Samik\LaravelAdmin\Policies\CrudPolicy;
+use App\Models\User;
 
 class DummyClass extends CrudPolicy
 {
