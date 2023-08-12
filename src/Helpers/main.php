@@ -250,6 +250,24 @@ if (!function_exists('format_price')) {
 	}
 }
 
+if (!function_exists('to_smallest_currency')) {
+    // converts a numeric price to int as the smallest unit of currency
+    function to_smallest_currency(mixed $value)
+    {
+        if($value && is_numeric($value)) return (int) $value * 100;
+        else return 0;
+    }
+}
+
+if (!function_exists('from_smallest_currency')) {
+    // converts a smallest unit of currency to it's basic form
+    function from_smallest_currency(mixed $value)
+    {
+        if($value && is_numeric($value)) return (float) format_price($value / 100);
+        else return 0;
+    }
+}
+
 if (!function_exists('financial_year')) {
     // Gets the current financial year
     // if fy.startmonth is not set, start month will default to April
@@ -264,6 +282,42 @@ if (!function_exists('financial_year')) {
 			$year = date($format) + 1;
 		}
 		return $year;
+    }
+}
+
+if (!function_exists('app_now')) {
+    // returns a carbon instance based on app timezone
+    function app_now()
+    {
+        return app_time(now());
+    }
+}
+
+if (!function_exists('db_now')) {
+    // returns a carbon instance based on db timezone
+    function db_now()
+    {
+        return db_time(now());
+    }
+}
+
+if (!function_exists('app_time')) {
+    // converts a carbon instance to app timezone
+    function app_time(Carbon|string|null $time)
+    {
+        if(!$time) return $time;
+        $time = is_string($time) ? Carbon::parse($time) : $time;
+        return $time->setTimezone(setting('app.timezone', 'UTC'));
+    }
+}
+
+if (!function_exists('db_time')) {
+    // converts a carbon instance to db timezone
+    function db_time(Carbon|string|null $time)
+    {
+        if(!$time) return $time;
+        $time = is_string($time) ? Carbon::parse($time) : $time;
+        return $time->setTimezone(setting('db.timezone', 'UTC'));
     }
 }
 
