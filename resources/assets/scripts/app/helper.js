@@ -7,9 +7,10 @@ var dateTimeFormat = "YYYY-MM-DD HH:mm:ss"
 
 function ok(obj) {
     try {
-        return ('undefined' !== typeof obj && obj !== null);
+        if (obj === 0) return true;
+        return (Boolean(obj) && 'undefined' !== typeof obj && obj !== null);
     }
-    catch(e) {
+    catch (e) {
         return false;
     }
 }
@@ -30,10 +31,10 @@ function calculate(item) {
     item.discount_rate = item.discount_rate ?? 0;
     item.discount = roundToTwo(item.mrp * (item.discount_rate / 100))
     item.net_price = item.mrp - item.discount;
-    switch(item.tax_method) {
+    switch (item.tax_method) {
         case 'INC':
             item.total = roundToTwo(item.net_price * item.quantity)
-            item.tax = roundToTwo(item.total - (item.total * ( 100 / (100 + f(item.tax_rate)))))
+            item.tax = roundToTwo(item.total - (item.total * (100 / (100 + f(item.tax_rate)))))
             item.taxable = roundToTwo(item.total - item.tax)
             break;
         case 'EXC':
@@ -50,7 +51,7 @@ function calculateTotals(items) {
     let quantity = 0;
     let tax = 0;
     let total = 0;
-    for(item of items) {
+    for (item of items) {
         quantity += parseFloat(item.quantity);
         tax += parseFloat(item.tax);
         total += parseFloat(item.total);
@@ -62,11 +63,11 @@ function calculateTotals(items) {
     };
 }
 
-function roundToTwo(num) {    
-    return +(Math.round(num + "e+2")  + "e-2");
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2") + "e-2");
 }
 
-function round(num) {    
+function round(num) {
     return Math.round(num);
 }
 
@@ -79,18 +80,18 @@ function snake(string) {
 }
 
 function goto(url, delay = 1000) {
-    setTimeout(function() { window.location.replace(url); }, delay);
+    setTimeout(function () { window.location.replace(url); }, delay);
 }
 
 function navigate(url, delay = 1000) {
-    setTimeout(function() { window.location = url; }, delay);
+    setTimeout(function () { window.location = url; }, delay);
 }
 
 function populateOptions(selector, dataset, selected) {
     let el = $(selector);
     el.empty();
 
-    for(option of dataset) {
+    for (option of dataset) {
         let optionSelected = Array.isArray(selected) ? selected.includes(option.key) : (selected == option.key);
         let optionElement = $('<option/>').attr({ value: option.key }).prop('selected', optionSelected).text(option.text);
         el.append(optionElement);
@@ -99,7 +100,7 @@ function populateOptions(selector, dataset, selected) {
 
 function getGenericResponseMessage(response) {
     let message = '';
-    switch(response.status) {
+    switch (response.status) {
         case 200:
         case 201:
         case 204:
@@ -126,7 +127,7 @@ function getGenericResponseMessage(response) {
 function toastResponse(response) {
     let isSuccess = (response.status >= 200 && response.status < 300);
     let message = getGenericResponseMessage(response);
-    if(isSuccess) {
+    if (isSuccess) {
         toastSuccess(message);
     }
     else {
@@ -176,7 +177,7 @@ function swal(title, message, type) {
 function swalConfirm(message, confirmCallback = null, denyCallback = null) {
     Swal.fire({
         title: `Are you sure?`,
-        text: message,
+        html: message,
         icon: "warning",
         showDenyButton: true,
         showCancelButton: false,
@@ -189,10 +190,10 @@ function swalConfirm(message, confirmCallback = null, denyCallback = null) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            if(confirmCallback) confirmCallback();
-        } 
+            if (confirmCallback) confirmCallback();
+        }
         else if (result.isDenied) {
-            if(denyCallback) denyCallback()
+            if (denyCallback) denyCallback()
         }
     });
 }
