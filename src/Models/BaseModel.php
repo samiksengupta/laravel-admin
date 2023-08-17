@@ -41,6 +41,16 @@ abstract class BaseModel extends Model
      */
     protected $guarded = [];
 
+    
+    /**
+     * Filter Attributes
+     *
+     * If true, when saving, attributes with non-null non-scalar data will be replaced with null
+     *
+     * @var array $guarded
+     */
+    protected $filterAttributes = true;
+
     /**
      * Returns the label value of the current instance of this model.
      *
@@ -161,6 +171,18 @@ abstract class BaseModel extends Model
         }
 
         return $query;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if($model->filterAttributes) {
+                $filtered = array_map(fn($value) => \is_scalar($value) || $value === null ? $value : null, $model->getAttributes());
+                $model->fill($filtered);
+            }
+        });
     }
 
     private static function applyFilterCondition($query, $key, $val) 
