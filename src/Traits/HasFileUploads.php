@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 trait HasFileUploads
 {
+    protected $deleteQueue;
 
     /**
      * Boot up the trait
@@ -19,41 +20,139 @@ trait HasFileUploads
             $model->storeFiles();
         });
 
-        // delete event
-        static::deleted(function ($model) {
+        static::deleting(function ($model) {
             $model->deleteFiles();
+        });
+        
+        static::saved(function ($model) {
+            $model->processDeleteQueue();
+        });
+
+        static::deleted(function ($model) {
+            $model->processDeleteQueue();
         });
     }
 
-    protected function storeFiles()
+    public function storeFiles()
     {
         foreach ($this->getDefinedUploadFields() as $key => $val) {
+            $folder = $val['folder'] ?? 'uploads';
+            $folder = $folder . DIRECTORY_SEPARATOR . date('Y-m');
+            $disk = $val['disk'] ?? 'public';
             $field = is_int($key) ? $val : $key;
+            // handle base64 inputs
             if (\request()->has($field) && $this->isValidBase64File(\request()->input($field))) {
-                $folder = $val['folder'] ?? 'uploads';
-                $folder = $folder . DIRECTORY_SEPARATOR . date('Y-m');
-                $disk = $val['disk'] ?? 'public';
-                $path = $this->storeBase64File(request()->input($field), $folder, $disk);
+                $file = request()->input($field);
+                $path = $this->storeBase64File($file, $folder, $disk);
                 if($path) {
-                    Storage::disk($disk)->delete($this->getOriginal($field) ?? "");
+                    $this->deleteFiles();
                     $this->attributes[$field] = $path;
                 }
+            }
+            // handle file inputs
+            elseif(request()->hasFile($field)) {
+                $files = request()->file($field);
+                if(\is_array($files)) {
+                    $paths = [];
+                    foreach($files as $file) {
+                        $path = $file->store($folder, $disk);
+                        if($path) $paths[] = $path;
+                        else {
+                            $paths = [];
+                            break;
+                        }
+                    }
+                    if(!empty($paths)) {
+                        $this->deleteFiles();
+                        $this->attributes[$field] = implode(',', $paths);
+                    }
+                }
                 else {
-                    $this->attributes[$field] = $this->getOriginal($field);
+                    $file = $files;
+                    $path = $file->store($folder, $disk);
+                    if($path) {
+                        $this->deleteFiles();
+                        $this->attributes[$field] = $path;
+                    }
                 }
             }
-            else $this->attributes[$field] = $this->attributes[$field] ?? $this->getOriginal($field);
+            // keep original or valid assigned value
+            else {
+                $value = $this->attributes[$field];
+                if(\is_array($value)) {
+                    $filtered = array_filter($value);
+                    $value = empty($filtered) ? null : implode(',', $filtered);
+                }
+                $this->attributes[$field] = $value ?? $this->getOriginal($field);
+            }
         }
     }
 
-    protected function deleteFiles()
+    // adds files to delete queue
+    public function deleteFiles(array $fields = null)
     {
-        foreach ($this->getDefinedUploadFields() as $key => $val) {
-            $field = is_int($key) ? $val : $key;
-            $disk = $val['disk'] ?? 'public';
-            if(!$this->attributes[$field]) continue;
-            Storage::disk($disk)->delete($this->attributes[$field]);
+        if($this->exists) {
+            foreach ($this->getDefinedUploadFields() as $key => $val) {
+                $field = is_int($key) ? $val : $key;
+                if($fields && !\in_array($field, $fields)) continue;
+                $disk = $val['disk'] ?? 'public';
+                $existing = $this->getOriginal($field);
+                if($existing) {
+                    $value = $existing;
+                    $files = explode(',', $existing);
+                    foreach($files as $index => $file) {
+                        if($file) {
+                            $this->addToDeleteQueue($file, $disk);
+                            unset($files[$index]);
+                        }
+                    }
+                    if(count($files)) $value = implode(',', $files);
+                    // $this->attributes[$field] = $value;
+                }
+            }
         }
+    }
+
+    // removes specific file by index from data and adds them to delete queue
+    public function removeFile(array $fields = null, int $index = 0)
+    {
+        if($this->exists) {
+            foreach ($this->getDefinedUploadFields() as $key => $val) {
+                $field = is_int($key) ? $val : $key;
+                if($fields && !\in_array($field, $fields)) continue;
+                $disk = $val['disk'] ?? 'public';
+                $existing = $this->getOriginal($field);
+                if($existing) {
+                    $value = $existing;
+                    $files = explode(',', $existing);
+                    $file = $files[$index] ?? null;
+                    if($file) {
+                        $this->addToDeleteQueue($file, $disk);
+                        unset($files[$index]);
+                    }
+                    if(count($files)) $value = implode(',', $files);
+                    // $this->attributes[$field] = $value;
+                }
+            }
+        }
+    }
+
+    public function addToDeleteQueue($path, $disk = 'public')
+    {
+        if(!\is_array($this->deleteQueue)) $this->deleteQueue = [];
+        $this->deleteQueue[$path] = $disk;
+    }
+
+    public function removeFromDeleteQueue($path)
+    {
+        if(!\is_array($this->deleteQueue)) $this->deleteQueue = [];
+        else unset($this->deleteQueue[$path]);
+    }
+
+    public function processDeleteQueue()
+    {
+        if(!\is_array($this->deleteQueue)) $this->deleteQueue = [];
+        else foreach($this->deleteQueue as $file => $disk) Storage::disk($disk)->delete($file);
     }
 
     /**
