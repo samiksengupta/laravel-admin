@@ -35,7 +35,7 @@ class LaravelAdminInstallCommand extends Command
             
             // publish assets
             $this->info("Publishing assets...");
-            $this->call('vendor:publish', ['--tag' => 'assets', '--force' => $force || $update, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $this->call('vendor:publish', ['--tag' => 'assets', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             
             // run migrations
             $this->info("Running migrations...");
@@ -44,7 +44,7 @@ class LaravelAdminInstallCommand extends Command
 
             // publish seeders
             $this->info("Publishing seeders...");
-            $this->call('vendor:publish', ['--tag' => 'seeders', '--force' => $force || $update, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $this->call('vendor:publish', ['--tag' => 'seeders', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             $this->call('vendor:publish', ['--tag' => 'data', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
 
             if(!$update && $this->confirm('Do you want to overwrite DatabaseSeeder in your Project from LaravelAdmin? (Recommended if installing in a fresh project)', (config('app.env') != 'production'))) $this->call('vendor:publish', ['--tag' => 'database-seeder', '--force' => true, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
