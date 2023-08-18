@@ -114,7 +114,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function setPreferencesAttribute($value)
     {
-        $this->attributes['preferences'] = $value ? $value->toJson() : json_encode([]);
+        if(!(\is_string($value) && \is_json($value))) {
+            if(\is_array($value)) $value = \json_encode($value);
+            elseif(\is_object($value) && $value instanceof Illuminate\Support\Collection) $value = $value->toJson();
+            else $value = \json_encode([]);
+        }
+        $this->attributes['preferences'] = $value;
     }
 
     public function getPreferencesAttribute($value)
