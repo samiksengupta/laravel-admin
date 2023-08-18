@@ -173,15 +173,17 @@ abstract class BaseModel extends Model
         return $query;
     }
 
+    private function filterAttributes()
+    {
+        if($this->filterAttributes) foreach($this->attributes as $key => &$value) $value = \is_scalar($value) || $value === null ? $value : null;
+    }
+
     public static function boot()
     {
         parent::boot();
 
         static::saving(function ($model) {
-            if($model->filterAttributes) {
-                $filtered = array_map(fn($value) => \is_scalar($value) || $value === null ? $value : null, $model->getAttributes());
-                $model->fill($filtered);
-            }
+            $model->filterAttributes();
         });
     }
 
