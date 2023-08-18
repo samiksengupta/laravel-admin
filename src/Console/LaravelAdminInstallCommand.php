@@ -118,7 +118,10 @@ class LaravelAdminInstallCommand extends Command
                     $this->warn('You will need to update this manually.  Change "extends Authenticatable" to "extends \Samik\LaravelAdmin\Models\User" in your User model and generate a policy for it with "php artisan make:xpolicy UserPolicy"');
                 }
             }
-            
+
+            $this->call('cache:clear');
+            $this->call('optimize');
+
             $this->info("Installed LaravelAdmin");
 
         } catch(\Illuminate\Database\QueryException $ex){
