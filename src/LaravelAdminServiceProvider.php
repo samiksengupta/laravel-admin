@@ -46,8 +46,14 @@ class LaravelAdminServiceProvider extends ServiceProvider
 
             // Publishing assets.
             $this->publishes([
-                __DIR__.'/../resources/assets' => public_path('laravel-admin'),
-            ], 'assets');
+                __DIR__.'/../resources/assets/dist' => public_path('laravel-admin/dist'),
+                __DIR__.'/../resources/assets/plugins' => public_path('laravel-admin/plugins'),
+            ], 'primary-assets');
+
+            $this->publishes([
+                __DIR__.'/../resources/assets/scripts' => public_path('laravel-admin/scripts'),
+                __DIR__.'/../resources/assets/styles' => public_path('laravel-admin/styles'),
+            ], 'secondary-assets');
 
             // Publishing the translation files.
             /*$this->publishes([

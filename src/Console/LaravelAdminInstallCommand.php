@@ -29,13 +29,17 @@ class LaravelAdminInstallCommand extends Command
 
         $this->info("Installing LaravelAdmin...");
         try {
+            
             // publish configuration
             $this->info("Publishing configuration...");
-            $this->call('vendor:publish', ['--tag' => 'config', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $replaceConfig = $update ? $this->confirm('Do you want to overwrite any existing LaravelAdmin config files in your project?', false) : false;
+            $this->call('vendor:publish', ['--tag' => 'config', '--force' => $force || $replaceConfig, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             
             // publish assets
             $this->info("Publishing assets...");
-            $this->call('vendor:publish', ['--tag' => 'assets', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $this->call('vendor:publish', ['--tag' => 'primary-assets', '--force' => $force || $update, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $replaceAssets = $update ? $this->confirm('Do you want to overwrite any existing LaravelAdmin asset files in your project?', false) : false;
+            $this->call('vendor:publish', ['--tag' => 'secondary-assets', '--force' => $force || $replaceAssets, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             
             // run migrations
             $this->info("Running migrations...");
@@ -44,8 +48,10 @@ class LaravelAdminInstallCommand extends Command
 
             // publish seeders
             $this->info("Publishing seeders...");
-            $this->call('vendor:publish', ['--tag' => 'seeders', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
-            $this->call('vendor:publish', ['--tag' => 'data', '--force' => $force, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $replaceSeeders = $update ? $this->confirm('Do you want to overwrite any existing LaravelAdmin seeder files in your project?', false) : false;
+            $this->call('vendor:publish', ['--tag' => 'seeders', '--force' => $force || $replaceSeeders, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
+            $replaceData = $update ? $this->confirm('Do you want to overwrite any existing LaravelAdmin data files in your project?', false) : false;
+            $this->call('vendor:publish', ['--tag' => 'data', '--force' => $force || $replaceData, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
 
             if(!$update && $this->confirm('Do you want to overwrite DatabaseSeeder in your Project from LaravelAdmin? (Recommended if installing in a fresh project)', (config('app.env') != 'production'))) $this->call('vendor:publish', ['--tag' => 'database-seeder', '--force' => true, '--provider' => 'Samik\\LaravelAdmin\\LaravelAdminServiceProvider']);
             else $this->info('Project\'s DatabaseSeeder was not changed. You will need to include seeders manually in your Project\'s DatabaseSeeder.');
