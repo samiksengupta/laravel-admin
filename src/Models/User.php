@@ -124,7 +124,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public function getPreferencesAttribute($value)
     {
-        return collect(json_decode($value));
+        return \is_json($value) ? collect(json_decode($value)) : collect([]);
     }
 
     public function setLocaleAttribute($value)
