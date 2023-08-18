@@ -78,7 +78,7 @@ trait HasFileUploads
             }
             // keep original or valid assigned value
             else {
-                $value = $this->attributes[$field];
+                $value = $this->attributes[$field] ?? null;
                 if(\is_array($value)) {
                     $filtered = array_filter($value);
                     $value = empty($filtered) ? null : implode(',', $filtered);
