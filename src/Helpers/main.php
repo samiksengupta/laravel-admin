@@ -428,10 +428,13 @@ if (!function_exists('money_format')) {
 
 if (!function_exists('is_json')) {
     // checks if a string is json
-    function is_json(string $string)
+    function is_json(?string $string)
     {
-        json_decode($string);
-        return json_last_error() === JSON_ERROR_NONE;
+        if($string) {
+            json_decode($string);
+            return json_last_error() === JSON_ERROR_NONE;
+        }
+        return false;
     }
 }
 
