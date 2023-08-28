@@ -14,7 +14,7 @@
                 <img src="{{ admin_asset_url('dist/img/default-avatar-160x160.png') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="{{ route('admin-profile') }}" class="d-block">{{ @Auth::user()->name ?? "Guest" }}</a>
+                <a href="{{ route('admin.profile') }}" class="d-block">{{ @Auth::user()->name ?? "Guest" }}</a>
             </div>
         </div>
 

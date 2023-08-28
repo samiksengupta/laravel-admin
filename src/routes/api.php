@@ -29,7 +29,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
         Route::post('command', 'SystemController@apiCommand');
     
         // logout
-        Route::post('logout', 'AccountController@apiLogout')->name('admin-logout');
+        Route::post('logout', 'AccountController@apiLogout')->name('admin.logout');
     
         // profile
         Route::put('profile', 'UserController@apiUpdateProfile');

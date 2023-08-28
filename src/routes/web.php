@@ -24,7 +24,7 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
         Route::get('reset', 'SystemController@doReset');
     
         // login
-        Route::get('login', 'AccountController@viewLogin')->name('admin-login');
+        Route::get('login', 'AccountController@viewLogin')->name('admin.login');
         // Route::post('login', 'AccountController@doLogin');
     
         // logout
@@ -41,13 +41,13 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
         // dashboard
         Route::get('/', 'SystemController@viewDashboard');
         
-        Route::get('dashboard', 'SystemController@viewDashboard')->name('admin-dashboard');
+        Route::get('dashboard', 'SystemController@viewDashboard')->name('admin.dashboard');
 
         Route::get('download/stored/{file}', 'SystemController@downloadStoredFile')->where('file', '.*');
         Route::get('download/public/{file}', 'SystemController@downloadPublicFile')->where('file', '.*');
     
         // profile
-        Route::get('profile', 'UserController@viewProfileForm')->name('admin-profile');
+        Route::get('profile', 'UserController@viewProfileForm')->name('admin.profile');
         
         // menu manager
         Route::get('menu-items', 'SystemController@viewMenuItems');
