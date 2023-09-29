@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <!-- left column -->
-        <div class="col-md-12">
+        <div id="@yield('container', 'form-container')" class="col-md-12">
             {{ html()->form($form['method'], $form['url'])->class('ajax-form')->acceptsFiles()->open() }}
             <div class="card card-info card-outline">
                 <div class="card-header rounded-0">
@@ -11,7 +11,12 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body rounded-0">
-                    @include('laravel-admin::partials.form-gen')
+                    @include('laravel-admin::partials.form-alert')
+                    @hasSection('main-content')
+                        @yield('main-content')
+                    @else
+                        @include('laravel-admin::partials.form-gen')
+                    @endif
                     @yield('additional-content')
                 </div>
                 <!-- /.card-body -->

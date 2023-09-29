@@ -12,10 +12,14 @@
                 <!-- /.card-header -->
                 <div class="card-body rounded-0">
                     @include('laravel-admin::partials.form-alert')
+                    @hasSection('main-content')
+                        @yield('main-content')
+                    @else
                     <div class="form-group col-md-12">
                         {{ html()->label()->for('csv')->text('CSV File')->class('col-form-label') }}
                         {{ html()->file('csv')->accept('.csv')->required(true) }}
                     </div>
+                    @endif
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer rounded-0">
