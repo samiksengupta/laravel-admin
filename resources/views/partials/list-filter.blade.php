@@ -15,6 +15,7 @@
             @php $name = "filter[{$element['key']}]" @endphp
             @php if($group == 'like') $name .= "[like]" @endphp
             @php if($group == 'range') $name .= "[range]" @endphp
+            @php if($group == 'scope') $name .= "[scope]" @endphp
             @php if($group == 'exists') $name .= "[exists]" @endphp
             @php $attributes = ['class' => 'form-control rounded-0 extra-filter'] @endphp
             <div class="col-md-4">

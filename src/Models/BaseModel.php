@@ -200,6 +200,10 @@ abstract class BaseModel extends Model
                 $range = explode(' - ', $val['range']);
                 $query->whereBetween($key, $range);
             }
+            elseif(isset($val['scope'])) {
+                $scope = $val['scope'];
+                if(method_exists($query->getModel(), Str::studly("scope_{$scope}"))) $query->$scope();
+            }
             elseif(isset($val['exists'])) {
                 if($val['exists'] === 'no') {
                     $query->doesntHave($key);
