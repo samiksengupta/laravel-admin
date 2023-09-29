@@ -5,7 +5,7 @@
         'placeholder' =>  ($element['attr']['placeholder'] ?? $element['label'] ?? null),
         'aria-invalid' =>  'false',
         'aria-describedby' =>  $key . '-error',
-        'data-default' => (isset($element['value']) && \is_string($element['value'])) ? $element['value'] : (isset($element['value']) && \is_array($element['value']) ? collect($element['value'])->toJson() : ''),
+        'data-default' => (isset($element['value']) && \is_scalar($element['value'])) ? $element['value'] : (isset($element['value']) && \is_array($element['value']) ? \json_encode($element['value']) : ''),
     ] + $element['attr'];
     $element['value'] = ($element['serializeValue'] ?? false) && \is_array($element['value']) ? collect($element['value'])->toJson() : $element['value'];
 @endphp
