@@ -12,6 +12,8 @@ use Samik\LaravelAdmin\Console\ExtendedModelMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedControllerMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedPolicyMakeCommand;
 use Samik\LaravelAdmin\Console\LaravelAdminInstallCommand;
+use Samik\LaravelAdmin\Console\FactoryResetCommand;
+use Samik\LaravelAdmin\Console\SeedSpamCommand;
 
 use Samik\LaravelAdmin\Http\Middlewares\Authenticate;
 
@@ -86,7 +88,9 @@ class LaravelAdminServiceProvider extends ServiceProvider
                 ExtendedModelMakeCommand::class,
                 ExtendedControllerMakeCommand::class,
                 ExtendedPolicyMakeCommand::class,
-                LaravelAdminInstallCommand::class
+                LaravelAdminInstallCommand::class,
+                FactoryResetCommand::class,
+                SeedSpamCommand::class
             ]);
         }
     }
