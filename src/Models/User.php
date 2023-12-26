@@ -36,8 +36,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'email',
         'phone',
         'password',
-        'role_id',
-        'team_id',
+        'role_id'
     ];
 
     /**
@@ -47,7 +46,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
      */
     protected $hidden = [
         'password',
-        'reWORKER_token',
+        'remember_token',
     ];
 
     /**
