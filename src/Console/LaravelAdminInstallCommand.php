@@ -8,7 +8,7 @@ use Samik\LaravelAdmin\Database\Seeders\DatabaseSeeder;
 
 class LaravelAdminInstallCommand extends Command
 {
-    protected $signature = 'admin:install {--e|empty : Wheather to prevent seeders from running} {--f|force : Wheather to overwrite existing published files, drop tables and re-run migrations} {--u|update : Wheather you are updating LaravelAdmin instead of installing for the first time}';
+    protected $signature = 'admin:install {--e|empty : Whether to prevent seeders from running} {--f|force : Whether to overwrite existing published files, drop tables and re-run migrations} {--u|update : Whether you are updating LaravelAdmin instead of installing for the first time}';
 
     protected $description = 'Install Laravel Admin';
 
