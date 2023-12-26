@@ -41,8 +41,8 @@ trait HasFileUploads
             $disk = $val['disk'] ?? 'public';
             $field = is_int($key) ? $val : $key;
             // handle base64 inputs
-            if (\request()->has($field) && $this->isValidBase64File(\request()->input($field))) {
-                $file = request()->input($field);
+            if ($this->isDirty($field) && $this->isValidBase64File($this->{$field})) {
+                $file = $this->{$field};
                 $path = $this->storeBase64File($file, $folder, $disk);
                 if($path) {
                     $this->deleteFiles();
@@ -50,7 +50,7 @@ trait HasFileUploads
                 }
             }
             // handle file inputs
-            elseif(request()->hasFile($field)) {
+            elseif($this->isDirty($field)) {
                 $files = request()->file($field);
                 if(\is_array($files)) {
                     $paths = [];
