@@ -9,7 +9,7 @@
                     @if($showPageAction ?? false)
                     <div class="float-right page-action">
                         @yield('additional-page-actions')
-                        {!! build_action_html($model::pageActions(), null, "{$modelName} Action"); !!}
+                        {!! build_action_html($model::pageActions(), null, @$modelName ? "{$modelName} Action" : "Action"); !!}
                     </div>
                     @endif
                 </div>
