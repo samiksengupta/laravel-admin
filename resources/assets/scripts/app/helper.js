@@ -27,6 +27,11 @@ function f(obj) {
     return parseFloat(obj);
 }
 
+function reindex(items) {
+    items.forEach((o, i) => o.index = i);
+    return items;
+}
+
 function calculate(item) {
     item.discount_rate = item.discount_rate ?? 0;
     item.discount = roundToTwo(item.mrp * (item.discount_rate / 100))
