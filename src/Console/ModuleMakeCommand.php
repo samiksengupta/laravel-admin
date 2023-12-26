@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class ModuleMakeCommand extends Command
 {
-    protected $signature = 'make:module {name} {--p|permissions} {--m|menuitems} {--s|seed}';
+    protected $signature = 'make:module {name : The class name for the Model } {--a|all : Create seeders for Permissions and MenuItems, run Seeders and Grant permissions to all roles } {--p|permissions : Create Permissions } {--m|menuitems : Create MenuItems} {--s|seed : Seed Permissions and MenuItems} {--g|grant : Grant seeded permissions to all roles }';
 
     protected $description = 'Create a new extended model class with migration, controller and policy';
 
@@ -18,7 +18,7 @@ class ModuleMakeCommand extends Command
         $this->call('make:xpolicy', ['name' => "{$moduleName}Policy"]);
         $this->call('make:xcontroller', ['name' => "Admin\\{$moduleName}Controller"]);
 
-        if($this->option('permissions')) {
+        if($this->option('permissions') || $this->option('all')) {
             $file = database_path("data/permissions.json");
             if(\File::exists($file)) {
                 $this->info("Generating Permissions...");
@@ -27,9 +27,16 @@ class ModuleMakeCommand extends Command
                 $data->put($moduleName, $permissions);
                 \File::put($file, $data->toJson(JSON_PRETTY_PRINT));
 
-                if($this->option('seed')) {
+                if($this->option('seed') || $this->option('all')) {
                     $this->info("Seeding Permissions...");
-                    $this->call('db:seed', ['--class' => 'PermissionSeeder']);
+                    // $this->call('db:seed', ['--class' => 'PermissionSeeder']);
+                    exec('php artisan db:seed --class=PermissionSeeder');
+
+                    if($this->option('grant') || $this->option('all')) {
+                        $this->info("Granting Permissions...");
+                        $permissionIds = \Samik\LaravelAdmin\Models\Permission::whereGroup($moduleName)->pluck('id');
+                        \Samik\LaravelAdmin\Models\Role::whereUnrestricted(0)->get()->each(fn($role) => $role->permissions()->attach($permissionIds));
+                    }
                 }
             }
             else {
@@ -37,7 +44,7 @@ class ModuleMakeCommand extends Command
             }
         }
 
-        if($this->option('menuitems')) {
+        if($this->option('menuitems') || $this->option('all')) {
             $file = database_path("data/menu-items.json");
             if(\File::exists($file)) {
                 $this->info("Generating Menu Items...");
@@ -54,7 +61,7 @@ class ModuleMakeCommand extends Command
                 else $data->push($menuItems);
                 \File::put($file, $data->toJson(JSON_PRETTY_PRINT));
 
-                if($this->option('seed')) {
+                if($this->option('seed') || $this->option('all')) {
                     $this->info("Seeding Menu Items...");
                     $this->call('db:seed', ['--class' => 'MenuItemSeeder']);
                 }
