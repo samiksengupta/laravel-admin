@@ -16,7 +16,7 @@
                     @else
                     <div id="group_daterange" class="form-group">
                         {{ html()->label()->for('daterange')->text('Date Range')->class('col-form-label') }}
-                        {{ html()->text('daterange')->value(\Carbon\Carbon::now()->subMonths($dateRangeMonths ?? 3)->format('Y-m-d') . ' - ' . \Carbon\Carbon::now()->format('Y-m-d'))->class('form-control rounded-0 daterangecustom daterange-input')->required(true)->readonly(true) }}
+                        {{ html()->text('daterange')->value(\Carbon\Carbon::now()->subMonths($dateRangeMonths ?? 3)->format('Y-m-d') . ' - ' . \Carbon\Carbon::now()->format('Y-m-d'))->class('form-control rounded-0 daterangecustom daterange-input')->required(true)->isReadonly(true) }}
                     </div>
                     @endif
                 </div>
