@@ -40,7 +40,41 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
         Route::put('menu-items', 'SystemController@apiReorderMenuItems');
         Route::delete('menu-items/{id}', 'SystemController@apiDeleteMenuItem');
     
+        // roles
+        Route::get('roles', 'RoleController@apiList');
+        Route::get('roles/dt', function() {
+            $controller = 'RoleController';
+            $method = 'apiList';
+            $callable = get_admin_action_callable($controller, $method);
+            if($callable) return App::call($callable, ['datatables' => true]);
+            else throw new Exception("Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
+        });
+        Route::post('roles', 'RoleController@apiCreate');
+        Route::get('roles/{id}', 'RoleController@apiRead');
+        Route::put('roles/{id}', 'RoleController@apiUpdate');
+        Route::delete('roles/{id}', 'RoleController@apiDelete');
+        Route::delete('roles', 'RoleController@apiDeleteAll');
+        Route::post('roles/import', 'RoleController@apiImport');
+        Route::get('roles/verify', 'RoleController@apiVerify');
+    
         Route::put('role/{id}/permissions', 'RoleController@apiUpdatePermissions');
+    
+        // users
+        Route::get('users', 'UserController@apiList');
+        Route::get('users/dt', function() {
+            $controller = 'UserController';
+            $method = 'apiList';
+            $callable = get_admin_action_callable($controller, $method);
+            if($callable) return App::call($callable, ['datatables' => true]);
+            else throw new Exception("Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
+        });
+        Route::post('users', 'UserController@apiCreate');
+        Route::get('users/{id}', 'UserController@apiRead');
+        Route::put('users/{id}', 'UserController@apiUpdate');
+        Route::delete('users/{id}', 'UserController@apiDelete');
+        Route::delete('users', 'UserController@apiDeleteAll');
+        Route::post('users/import', 'UserController@apiImport');
+        Route::get('users/verify', 'UserController@apiVerify');
     
         if(config('laravel-admin.auto_routing')) {
             // generic CRUD api

@@ -61,8 +61,22 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
         Route::get('settings/{id}/value', 'SettingController@viewValueForm');
         Route::get('settings/{id}/delete', 'SettingController@viewDelete');
     
+        // roles
+        Route::get('roles', 'RoleController@viewList');
+        Route::get('roles/new', 'RoleController@viewForm');
+        Route::get('roles/{id}', 'RoleController@viewData');
+        Route::get('roles/{id}/edit', 'RoleController@viewForm');
+        Route::get('roles/{id}/delete', 'RoleController@viewDelete');
+
         Route::get('roles/{id}/permissions', 'RoleController@viewPermissions');
         Route::get('roles/{id}/permission/switches', 'RoleController@viewPermissionSwitches');
+    
+        // users
+        Route::get('users', 'UserController@viewList');
+        Route::get('users/new', 'UserController@viewForm');
+        Route::get('users/{id}', 'UserController@viewData');
+        Route::get('users/{id}/edit', 'UserController@viewForm');
+        Route::get('users/{id}/delete', 'UserController@viewDelete');
 
         Route::get('api-resources/{apiResource}/test', 'ApiResourceController@viewTest');
 
