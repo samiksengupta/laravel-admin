@@ -36,11 +36,6 @@
             "src/Helpers/main.php"
         ]
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Samik\\LaravelAdmin\\Tests\\": "tests"
-        }
-    },
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
