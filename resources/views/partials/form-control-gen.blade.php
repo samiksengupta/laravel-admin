@@ -121,37 +121,6 @@
         {{ html()->text($key)->value($element['value'])->attributes($attributes) }}
     @break
     @case('file')
-        <div class="custom-file rounded-0">
-            {{ html()->file($key)->attributes($attributes) }}
-            {{ html()->label()->for($key)->text($element['label'])->class('custom-file-label') }}
-        </div>
-        @if($element['value'])
-        <div class="card">
-            <div class="card-body">
-                @if(isset($element['displayAs']))
-                    @switch($element['displayAs'])
-                        @case('url')
-                        {{ file_url($element['value']) }}
-                        @break
-                        @case('link')
-                        <a target="_blank" href="{{ file_url($element['value']) }}"><i class="fas fa-link"></i>&nbsp;Link</a>
-                        @break
-                        @case('image')
-                        <a target="_blank" href="{{ file_url($element['value']) }}"><img src="{{ file_url($element['value']) }}" width="128" height="64" style="object-fit:contain;" /></a>
-                        @break
-                        @case('download')
-                        <a target="_blank" href="{{ download_url($element['value']) }}"><i class="fas fa-download"></i>&nbsp;Download</a>
-                        @break
-                        @default
-                        <em>{{ $element['value'] }}</em>
-                    @endswitch
-                @else
-                <em>{{ $element['value'] }}</em>
-                @endif
-            </div>
-        </div>
-        @endif
-    @break
     @case('files')
         <div class="custom-file rounded-0">
             {{ html()->file("{$key}[]")->multiple()->id($key)->attributes($attributes) }}
