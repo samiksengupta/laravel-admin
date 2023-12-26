@@ -50,7 +50,7 @@ class MenuItem extends BaseModel
             return ($subMenuActive);
         }
         else {
-            return ($this->path == request()->path());
+            return ($this->path == str(request()->path())->after('admin/')->toString());
         }
         
     }
@@ -61,25 +61,36 @@ class MenuItem extends BaseModel
         return $query;
     }
 
+    // The main filter query used to display menu
     public function scopeHierarchy($query)
     {
+        // get all visible items
         $query->visible();
+
+        // get in set order
         $query->orderBy('order');
+
+        // attach children which are visible, permitted and in set order
         $query->with(['children' => function($q0) {
             $q0->orderBy('order');
-            if (!Auth()->user()->role->unrestricted) $q0->whereIn('permission_id', Auth()->user()->role->permissions->pluck('id'));
+            if (auth_user() && !auth_user()->role->unrestricted) $q0->whereIn('permission_id', auth_user()->role->permissions->pluck('id'))->orwhere('permission_id', null);
         }]);
+
+        // get root level items without children which are permitted
         $query->where(function ($q1) {
             $q1->whereDoesntHave('parent');
             $q1->whereDoesntHave('children');
-            if (!Auth()->user()->role->unrestricted) $q1->whereIn('permission_id', Auth()->user()->role->permissions->pluck('id'));
+            if (auth_user() && !auth_user()->role->unrestricted) $q1->whereIn('permission_id', auth_user()->role->permissions->pluck('id'))->orwhere('permission_id', null);
         });
+
+        // or get root level items which has children which are permitted
         $query->orWhere(function ($q2) {
             $q2->whereDoesntHave('parent');
             $q2->whereHas('children', function ($q21) {
-                if (!Auth()->user()->role->unrestricted) $q21->whereIn('permission_id', Auth()->user()->role->permissions->pluck('id'));
+                if (auth_user() && !auth_user()->role->unrestricted) $q21->whereIn('permission_id', auth_user()->role->permissions->pluck('id'))->orwhere('permission_id', null);
             });
         });
+
         return $query;
     }
 

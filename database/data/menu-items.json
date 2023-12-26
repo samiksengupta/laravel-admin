@@ -43,7 +43,8 @@
                 "text": "Commands",
                 "icon_class": "fas fa-terminal",
                 "path": "commands",
-                "target": "_blank"
+                "target": "_blank",
+                "permission": "System.commands"
             }
         ]
     },
@@ -51,6 +52,6 @@
         "text": "API Resources",
         "icon_class": "fas fa-code",
         "path": "api-resources",
-        "permission": "ApiTest.read"
+        "permission": "ApiResource.read"
     }
 ]
