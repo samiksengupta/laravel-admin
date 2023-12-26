@@ -223,6 +223,16 @@ abstract class BaseModel extends Model
     }
 
     /**
+     * Returns the database name of this model.
+     *
+     * @return string       the database name
+     */
+    public static function dbName()
+    {
+        return with(new static)->getConnection()->getDatabaseName();
+    }
+
+    /**
      * Returns the table name of this model.
      *
      * @return string       the table name
@@ -310,27 +320,51 @@ abstract class BaseModel extends Model
      */
     public static function getTableKeys() 
     {
-        $table = static::tableName();
-
         $keys = [
             'primary' => [],
             'unique' => []
         ];
 
-        //get the array of table indexes
-        $indexes =  Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table);
+        // Get DB and Table name
+        $dbName = static::dbName();
+        $tableName = static::tableName();
 
-        //abort if there are no indexes
-        if(!\is_array($indexes)) return false;
-        
-        foreach($indexes as $index) {
-            if($index->isPrimary()) {
-                $keys['primary'] = $index->getColumns();
-                continue;
-            }
-            if($index->isUnique() && !$index->isPrimary()) {
-                $keys['unique'][] = $index->getColumns()[0];
-                continue;
+        if(Schema::hasTable($tableName)) {
+            //get the array of table indexes
+            $indexes = \DB::table('information_schema.columns')
+                ->select([
+                    'information_schema.columns.TABLE_SCHEMA AS db',
+                    'information_schema.columns.TABLE_NAME as table',
+                    'information_schema.columns.COLUMN_NAME as column',
+                    \DB::raw("IF(index_name = 'PRIMARY', 'Primary', 'Unique') AS type")
+                ])
+                ->leftJoin('information_schema.statistics', function ($join) {
+                    $join
+                    ->on('information_schema.columns.TABLE_SCHEMA', '=', 'information_schema.statistics.TABLE_SCHEMA')
+                    ->on('information_schema.columns.TABLE_NAME', '=', 'information_schema.statistics.TABLE_NAME')
+                    ->on('information_schema.columns.COLUMN_NAME', '=', 'information_schema.statistics.COLUMN_NAME');
+                })
+                ->where('information_schema.columns.TABLE_SCHEMA', '=', $dbName)
+                ->where('information_schema.columns.TABLE_NAME', '=', $tableName)
+                ->where(function ($query) {
+                    $query->where('information_schema.statistics.INDEX_NAME', '=', 'PRIMARY')
+                        ->orWhere('information_schema.statistics.NON_UNIQUE', '=', 0);
+                })
+                ->get();
+
+            //abort if there are no indexes
+            if(!\is_array($indexes) && count($indexes) < 1) return $keys;
+            
+            // if there are primary or unique keys, capture their column names and return
+            foreach($indexes as $index) {
+                if($index->type == 'Primary') {
+                    $keys['primary'] = $index->column;
+                    continue;
+                }
+                if($index->type == 'Unique') {
+                    $keys['unique'][] = $index->column;
+                    continue;
+                }
             }
         }
 
@@ -828,74 +862,47 @@ abstract class BaseModel extends Model
             if(\method_exists(\get_called_class(), $accessor)) $datatable->editColumn($key, fn($row) => $row->{$accessor}());
 
             // overwrite values for file/files type and options
-            if(isset($element['type']) && $element['type'] === 'file' && isset($element['displayAs'])) {
-                switch($element['displayAs']) {
-                    case 'url': 
-                        $datatable->editColumn($key, function($row) use($key) {
-                            return file_url($row->{$key});
-                        });
-                        break;
-                    case 'link':
-                        $datatable->editColumn($key, function($row) use($key) {
-                            $html = '<a target="_blank" href="' . file_url($row->{$key}) . '"><i class="fas fa-link"></i>&nbsp;Link</a>';
-                            return $html;
-                        });
-                        $rawColumns[] = $key;
-                        break;
-                    case 'image':
-                        $datatable->editColumn($key, function($row) use($key) {
-                            if($row->{$key}) $html = '<a target="_blank" href="' . file_url($row->{$key}) . '"><img src="' . file_url($row->{$key}) . '" width="128" height="64" style="object-fit:contain;" /></a>';
-                            else $html = '<em>Not Set</em>';
-                            return $html;
-                        });
-                        $rawColumns[] = $key;
-                        break;
-                    case 'download':
-                        $datatable->editColumn($key, function($row) use($key) {
-                            if($row->{$key}) $html = '<a target="_blank" href="' . download_url($row->{$key}) . '"><i class="fas fa-download"></i>&nbsp;Download</a>';
-                            else $html = '<em>Not Set</em>';
-                            return $html;
-                        });
-                        $rawColumns[] = $key;
-                        break;
-                }
-            }
-            if(isset($element['type']) && $element['type'] === 'files' && isset($element['displayAs'])) {
+            if(isset($element['type']) && in_array($element['type'], ['file', 'files']) && isset($element['displayAs'])) {
                 $limit = setting('admin.multifile_preview_limit', 3);
+                $multiple = $element['type'] === 'files';
                 switch($element['displayAs']) {
                     case 'url': 
-                        $datatable->editColumn($key, function($row) use($key, $limit) {
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
                             $files = \Str::of($row->{$key})->explode(',');
                             $limit = $limit < $files->count() ? $limit : $files->count();
                             $content = $row->{$key} ? $files->take($limit)->map(fn($file) => sprintf('<p>%s</p>', file_url($file)))->join("") : null;
-                            return $content ? \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count())) : '<em>Not Set</em>';
+                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                            return $content ? $content : '<em>Not Set</em>';
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'link':
-                        $datatable->editColumn($key, function($row) use($key, $limit) {
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
                             $files = \Str::of($row->{$key})->explode(',');
                             $limit = $limit < $files->count() ? $limit : $files->count();
                             $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_blank" href="%s"><i class="fas fa-link"></i>&nbsp;Link</a></p>', file_url($file)))->join("") : null;
-                            return $content ? \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count())) : '<em>Not Set</em>';
+                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                            return $content ? $content : '<em>Not Set</em>';
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'image':
-                        $datatable->editColumn($key, function($row) use($key, $limit) {
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
                             $files = \Str::of($row->{$key})->explode(',');
                             $limit = $limit < $files->count() ? $limit : $files->count();
                             $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<a target="_blank" href="%1$s"><img src="%1$s" width="128" height="64" style="object-fit:contain;" /></a>', file_url($file)))->join("") : null;
-                            return $content ? \Str::of($content)->prepend('<p>')->append('</p>')->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count())) : '<em>Not Set</em>';
+                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                            return $content ? $content : '<em>Not Set</em>';
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'download':
-                        $datatable->editColumn($key, function($row) use($key, $limit) {
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
                             $files = \Str::of($row->{$key})->explode(',');
                             $limit = $limit < $files->count() ? $limit : $files->count();
                             $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_self" href="%s"><i class="fas fa-download"></i>&nbsp;Download</a></p>', download_url($file)))->join("") : null;
-                            return $content ? \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count())) : '<em>Not Set</em>';
+                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                            return $content ? $content : '<em>Not Set</em>';
                         });
                         $rawColumns[] = $key;
                         break;
