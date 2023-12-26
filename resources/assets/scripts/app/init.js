@@ -264,9 +264,11 @@ function initModal(successCallback) {
                 else {
                     initJqueryForm('.ajax-form', function (response, status) {
                         modal.modal('toggle');
+                        initJqueryForm();       // reinitialize any parent forms
                         if (successCallback) successCallback(response);
                     }, null, function () {
                         modal.modal('toggle');
+                        initJqueryForm();       // reinitialize any parent forms
                     });
 
                     // reinitialize any input plugins
