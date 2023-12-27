@@ -426,6 +426,21 @@ if (!function_exists('money_format')) {
     }
 }
 
+if (!function_exists('add_interval')) {
+    // adds certain interval to a carbon instance and returns
+    function add_interval($interval, Carbon|string $startTime = null)
+    {
+        $startTime ??= app_now();
+        $startTime = is_string($startTime) ? app_time($startTime) : $startTime;
+        switch($interval) {
+            case 'Daily': return $startTime->addDay()->startOfDay();
+            case 'Weekly': return $startTime->addWeek()->startOfWeek();
+            case 'Monthly': return $startTime->addMonth()->startOfMonth();
+        }
+        return $startTime;
+    }
+}
+
 if (!function_exists('is_json')) {
     // checks if a string is json
     function is_json(?string $string)
