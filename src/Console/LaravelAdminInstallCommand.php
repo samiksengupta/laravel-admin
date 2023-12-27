@@ -134,7 +134,7 @@ class LaravelAdminInstallCommand extends Command
                         // Make project model extend the package model
                         $modelContent = str_replace('extends Authenticatable', "extends \Samik\LaravelAdmin\Models\User", $modelContent);
                         
-                        // Modify fillable property in child with parent if possible
+                        // Modify fillable property in child using parent if possible
                         $parentClass = LaravelAdmin::modelClass('User');
                         $parentReflection = new ReflectionClass($parentClass);
                         $parentFillables = $parentReflection->hasProperty('fillable') ? collect($parentReflection->getProperty('fillable')->getValue(new $parentClass())) : collect([]);
