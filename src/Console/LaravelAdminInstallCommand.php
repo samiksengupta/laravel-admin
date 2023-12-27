@@ -144,17 +144,20 @@ class LaravelAdminInstallCommand extends Command
                         $childFillables = $childReflection->hasProperty('fillable') ? collect($childReflection->getProperty('fillable')->getValue(new $childClass())) : collect([]);
 
                         if($parentFillables->count()) {
-                            $modelContent = str_replace(
-                                "protected \$fillable = [",
-                                "protected \$fillable = [" . PHP_EOL . "\t\t" . implode(
-                                            ',' . PHP_EOL . "\t\t", 
-                                            $parentFillables
-                                            ->reject(fn($f) => $childFillables->contains($f))
-                                            ->map(fn($f) => "'{$f}'")
-                                            ->toArray()
-                                ) . ",",
-                                $modelContent
-                            );
+                            $appendable = $parentFillables
+                            ->reject(fn($f) => $childFillables->contains($f))
+                            ->map(fn($f) => "'{$f}'");
+                            if($appendable->count()) {
+                                $modelContent = str_replace(
+                                    "protected \$fillable = [",
+                                    "protected \$fillable = [" . PHP_EOL . "\t\t" . implode(
+                                                ',' . PHP_EOL . "\t\t", 
+                                                $appendable->toArray()
+                                    ) . ",",
+                                    $modelContent
+                                );
+                            }
+                            
                         }
 
                         file_put_contents($modelPath, $modelContent);
