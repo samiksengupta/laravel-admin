@@ -52,27 +52,30 @@ trait HasFileUploads
             // handle file inputs
             elseif($this->isDirty($field)) {
                 $files = request()->file($field);
-                if(\is_array($files)) {
-                    $paths = [];
-                    foreach($files as $file) {
-                        $path = $file->store($folder, $disk);
-                        if($path) $paths[] = $path;
-                        else {
-                            $paths = [];
-                            break;
+                if($files) {
+                    if(\is_array($files)) {
+                        $paths = [];
+                        foreach($files as $file) {
+                            if(!$file) continue;
+                            $path = $file->store($folder, $disk);
+                            if($path) $paths[] = $path;
+                            else {
+                                $paths = [];
+                                break;
+                            }
+                        }
+                        if(!empty($paths)) {
+                            $this->deleteFiles();
+                            $this->attributes[$field] = implode(',', $paths);
                         }
                     }
-                    if(!empty($paths)) {
-                        $this->deleteFiles();
-                        $this->attributes[$field] = implode(',', $paths);
-                    }
-                }
-                else {
-                    $file = $files;
-                    $path = $file->store($folder, $disk);
-                    if($path) {
-                        $this->deleteFiles();
-                        $this->attributes[$field] = $path;
+                    else {
+                        $file = $files;
+                        $path = $file->store($folder, $disk);
+                        if($path) {
+                            $this->deleteFiles();
+                            $this->attributes[$field] = $path;
+                        }
                     }
                 }
             }
