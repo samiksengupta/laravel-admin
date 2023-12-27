@@ -224,6 +224,11 @@ function initJqueryForm(targetForm = '.ajax-form', successCallback = null, error
             if (cancelUrl) navigate(cancelUrl, 100);
         }
     })
+
+    form.find('button.navigable').click(function () {
+        let url = $(this).data('url');
+        if (url) navigate(url, 100);
+    })
 }
 
 // used for POST logout api requests
