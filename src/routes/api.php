@@ -85,7 +85,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // list datatables
             Route::get('{resource}/dt', function($resource){
@@ -94,7 +94,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable, ['datatables' => true]);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // create
             Route::post('{resource}', function($resource){
@@ -103,7 +103,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // read
             Route::get('{resource}/{id}', function($resource, $id){
@@ -112,7 +112,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable, ['id' => $id]);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'id' => Config::get('constants.REGEX_NUMERIC')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'id' => config('constants.REGEX_NUMERIC')]);
     
             // update
             Route::put('{resource}/{id}', function($resource, $id){
@@ -121,7 +121,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable, ['id' => $id]);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'id' => Config::get('constants.REGEX_NUMERIC')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'id' => config('constants.REGEX_NUMERIC')]);
     
             // delete
             Route::delete('{resource}/{id}', function($resource, $id){
@@ -130,7 +130,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable, ['id' => $id]);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'id' => Config::get('constants.REGEX_NUMERIC')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'id' => config('constants.REGEX_NUMERIC')]);
     
             // delete all
             Route::delete('{resource}', function($resource){
@@ -139,7 +139,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // import
             Route::post('{resource}/import', function($resource){
@@ -148,7 +148,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // verify
             Route::get('{resource}/verify', function($resource){
@@ -157,7 +157,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
             // bulk actions
             Route::post('{resource}/bulk/{action}', function($resource, $action){
@@ -166,7 +166,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'action' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'action' => config('constants.REGEX_KEBAB_CASE')]);
     
             // others
             Route::get('{resource}/{action}', function($resource, $action){
@@ -175,7 +175,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'action' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'action' => config('constants.REGEX_KEBAB_CASE')]);
             
             Route::post('{resource}/{action}', function($resource, $action){
                 $controller = Str::singular(Str::studly($resource)) . 'Controller';
@@ -183,7 +183,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 $callable = get_admin_action_callable($controller, $method);
                 if($callable) return App::call($callable);
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
-            })->where(['resource' => Config::get('constants.REGEX_KEBAB_CASE'), 'action' => Config::get('constants.REGEX_KEBAB_CASE')]);
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE'), 'action' => config('constants.REGEX_KEBAB_CASE')]);
             
         }
     
