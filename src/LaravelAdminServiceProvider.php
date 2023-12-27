@@ -4,6 +4,7 @@ namespace Samik\LaravelAdmin;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Routing\Router;
 
 use Samik\LaravelAdmin\Console\CreateUserCommand;
@@ -19,32 +20,50 @@ use Samik\LaravelAdmin\Http\Middlewares\Authenticate;
 
 class LaravelAdminServiceProvider extends ServiceProvider
 {
+
+    /**
+     * Register the application services.
+     */
+    public function register()
+    {       
+        // Set admin.auth middleware alias
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('admin.auth', Authenticate::class);
+
+        // Register the main class to use with the facade
+        $this->app->singleton('laravel-admin', function () {
+            return new LaravelAdmin;
+        });
+    }
+
     /**
      * Bootstrap the application services.
      */
     public function boot()
     {
-        config(['app.asset_url' => config('laravel-admin.app_asset_url')]);
+
+        $this->addConfigs();
+        $this->registerRoutes();
+
         /*
          * Optional methods to load your package assets
          */
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-admin');
+        
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-admin');
+        
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
-        $this->loadRoutesFrom(__DIR__.'/routes/api.php');
-        // $this->registerRoutes();
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('laravel-admin.php'),
-                __DIR__.'/../config/constants.php' => config_path('constants.php'),
-            ], 'config');
 
             // Publishing the views.
             /*$this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/laravel-admin'),
             ], 'views');*/
+
+            $this->publishes([
+                __DIR__.'/../resources/views/partials/footer.blade.php' => resource_path('views/vendor/laravel-admin/partials/footer.blade.php'),
+            ], 'footer');
 
             // Publishing assets.
             $this->publishes([
@@ -94,30 +113,44 @@ class LaravelAdminServiceProvider extends ServiceProvider
             ]);
         }
     }
-
-    /**
-     * Register the application services.
-     */
-    public function register()
+    
+    protected function addConfigs()
     {
-        // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-admin');
-        $this->mergeConfigFrom(__DIR__.'/../config/constants.php', 'constants');
-        
-        // Set admin.auth middleware alias
-        $router = $this->app->make(Router::class);
-        $router->aliasMiddleware('admin.auth', Authenticate::class);
+        // publish admin configs
+        if(!config('app.asset_url')) {
+            config([
+                'app.asset_url' => config('laravel-admin.app_asset_url'),
+            ]);
 
-        // Register the main class to use with the facade
-        $this->app->singleton('laravel-admin', function () {
-            return new LaravelAdmin;
-        });
+            $this->publishes([
+                __DIR__.'/../config/admin.php' => config_path('laravel-admin.php'),
+                __DIR__.'/../config/constants.php' => config_path('constants.php'),
+            ], 'admin-config');
+        }
+
+        // publish project configs
+        if (!config('auth.guards.admin')) {
+            config(['auth.guards.admin' => [
+                'driver' => 'session',
+                'provider' => 'users',
+            ]]);
+
+            $this->publishes([
+                __DIR__.'/../config/auth.php' => config_path('auth.php'),
+            ], 'config');
+        }
     }
     
-    /* protected function registerRoutes()
+    protected function registerRoutes()
     {
-        Route::group($this->routeConfiguration(), function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        });
-    } */
+        // prioritize application routes over package routes
+        
+        // api routes
+        $this->loadRoutesFrom(base_path('routes/api.php'));
+        $this->loadRoutesFrom(__DIR__.'/routes/api.php');
+        
+        // web routes
+        $this->loadRoutesFrom(base_path('routes/web.php'));
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+    }
 }
