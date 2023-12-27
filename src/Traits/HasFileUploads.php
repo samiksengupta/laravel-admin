@@ -140,6 +140,39 @@ trait HasFileUploads
         }
     }
 
+    // removes specific file by name from data and adds them to delete queue
+    public function removeFileByName(string $fieldName, string $fileName)
+    {
+        if($this->exists) {
+            $field = @$this->getDefinedUploadFields()[$fieldName];
+            if($field) {
+                $disk = $field['disk'] ?? 'public';
+                $existing = $this->getOriginal($fieldName);
+                if($existing) {
+                    $value = $existing;
+                    $files = explode(',', $existing);
+                    $file = collect($files)->first(fn($f) => basename($f) === $fileName);
+                    if($file) {
+                        // add to delete queue
+                        $this->addToDeleteQueue($file, $disk);
+
+                        // keep remaining files if possible
+                        $files = collect($files)->reject(fn($f) => basename($f) === $fileName)->toArray();
+                        if(count($files)) {
+                            $value = implode(',', $files);
+                            $this->attributes[$fieldName] = $value;
+                        }
+                        else $this->attributes[$fieldName] = null;
+
+                        // save model and process delete queue
+                        $this->saveQuietly();
+                        $this->processDeleteQueue();
+                    }
+                }
+            }
+        }
+    }
+
     public function addToDeleteQueue($path, $disk = 'public')
     {
         if(!\is_array($this->deleteQueue)) $this->deleteQueue = [];

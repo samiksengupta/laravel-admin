@@ -202,3 +202,22 @@ function swalConfirm(message, confirmCallback = null, denyCallback = null) {
         }
     });
 }
+
+function deleteUploadedFile(selector) {
+    swalConfirm("This will instantly delete the selected file from the server. Do you want to continue?", () => {
+        const baseUrl = document.querySelector('#base-api-admin-url').getAttribute('href');
+        const card = document.querySelector(selector);
+        const resource = card.getAttribute('data-resource')
+        const id = card.getAttribute('data-id')
+        const field = card.getAttribute('data-field')
+        const file = card.getAttribute('data-file')
+        const url = `${baseUrl}/${resource}/${id}/files/${field}/${file}`;
+        axios.delete(url).then(function (response) {
+            card.style.display = 'none';
+            // if (ok(response.data.navigate)) navigate(response.data.navigate, 500);
+        }).catch(function (error) {
+            cc("error", error);
+        });
+    })
+    return false;
+}

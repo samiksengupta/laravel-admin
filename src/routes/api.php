@@ -142,6 +142,15 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
                 else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
             })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
     
+            // delete a file from index
+            Route::delete('{resource}/{id}/files/{field}/{file}', function($resource, $id, $field, $file){
+                $controller = Str::singular(Str::studly($resource)) . 'Controller';
+                $method = 'apiDeleteFile';
+                $callable = get_admin_action_callable($controller, $method);
+                if($callable) return App::call($callable, ['id' => $id, 'field' => $field, 'file' => $file]);
+                else throw new Exception("Auto Routing failed: Could not find a valid path to action target '{$controller}@{$method}'");
+            })->where(['resource' => config('constants.REGEX_KEBAB_CASE')]);
+    
             // import
             Route::post('{resource}/import', function($resource){
                 $controller = Str::singular(Str::studly($resource)) . 'Controller';

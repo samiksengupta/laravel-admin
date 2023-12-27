@@ -865,44 +865,57 @@ abstract class BaseModel extends Model
             if(isset($element['type']) && in_array($element['type'], ['file', 'files']) && isset($element['displayAs'])) {
                 $limit = setting('admin.multifile_preview_limit', 3);
                 $multiple = $element['type'] === 'files';
+                $notSetDisplay = '<em>Not Set</em>';
                 switch($element['displayAs']) {
                     case 'url': 
-                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
-                            $files = \Str::of($row->{$key})->explode(',');
-                            $limit = $limit < $files->count() ? $limit : $files->count();
-                            $content = $row->{$key} ? $files->take($limit)->map(fn($file) => sprintf('<p>%s</p>', file_url($file)))->join("") : null;
-                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
-                            return $content ? $content : '<em>Not Set</em>';
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple, $notSetDisplay) {
+                            if($row->{$key}) {
+                                $files = \Str::of($row->{$key})->explode(',');
+                                $limit = $limit < $files->count() ? $limit : $files->count();
+                                $content = $row->{$key} ? $files->take($limit)->map(fn($file) => sprintf('<p>%s</p>', file_url($file)))->join("") : null;
+                                if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                                return $content ? $content : $notSetDisplay;
+                            }
+                            return $notSetDisplay;
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'link':
-                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
-                            $files = \Str::of($row->{$key})->explode(',');
-                            $limit = $limit < $files->count() ? $limit : $files->count();
-                            $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_blank" href="%s"><i class="fas fa-link"></i>&nbsp;Link</a></p>', file_url($file)))->join("") : null;
-                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
-                            return $content ? $content : '<em>Not Set</em>';
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple, $notSetDisplay) {
+                            if($row->{$key}) {
+                                $files = \Str::of($row->{$key})->explode(',');
+                                $limit = $limit < $files->count() ? $limit : $files->count();
+                                $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_blank" href="%s"><i class="fas fa-link"></i>&nbsp;Link</a></p>', file_url($file)))->join("") : null;
+                                if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                                return $content ? $content : $notSetDisplay;
+                            }
+                            return $notSetDisplay;
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'image':
-                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
-                            $files = \Str::of($row->{$key})->explode(',');
-                            $limit = $limit < $files->count() ? $limit : $files->count();
-                            $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<a target="_blank" href="%1$s"><img src="%1$s" width="128" height="64" style="object-fit:contain;" /></a>', file_url($file)))->join("") : null;
-                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
-                            return $content ? $content : '<em>Not Set</em>';
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple, $notSetDisplay) {
+                            if($row->{$key}) {
+                                $files = \Str::of($row->{$key})->explode(',');
+                                $limit = $limit < $files->count() ? $limit : $files->count();
+                                $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<a target="_blank" href="%1$s"><img src="%1$s" width="128" height="64" style="object-fit:contain;" /></a>', file_url($file)))->join("") : null;
+                                if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                                return $content ? $content : $notSetDisplay;
+                            }
+                            return $notSetDisplay;
                         });
                         $rawColumns[] = $key;
                         break;
                     case 'download':
-                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple) {
-                            $files = \Str::of($row->{$key})->explode(',');
-                            $limit = $limit < $files->count() ? $limit : $files->count();
-                            $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_self" href="%s"><i class="fas fa-download"></i>&nbsp;Download</a></p>', download_url($file)))->join("") : null;
-                            if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
-                            return $content ? $content : '<em>Not Set</em>';
+                        $datatable->editColumn($key, function($row) use($key, $limit, $multiple, $notSetDisplay) {
+                            if($row->{$key}) {
+                                $files = \Str::of($row->{$key})->explode(',');
+                                $limit = $limit < $files->count() ? $limit : $files->count();
+                                $content = $row->{$key} ? $files->take($limit)->map(fn($file) =>  sprintf('<p><a target="_self" href="%s"><i class="fas fa-download"></i>&nbsp;Download</a></p>', download_url($file)))->join("") : null;
+                                if($multiple) $content = \Str::of($content)->append(sprintf('<p><em>Showing %d out of %d</em></p>', $limit, $files->count()));
+                                return $content ? $content : $notSetDisplay;
+                            }
+                            return $notSetDisplay;
                         });
                         $rawColumns[] = $key;
                         break;

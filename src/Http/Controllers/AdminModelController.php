@@ -225,7 +225,25 @@ class AdminModelController extends AdminBaseController
     public function apiDeleteAll(Request $request)
     {
         $this->authorize('delete', $this->model);
-        return response()->json(['target' => __CLASS__ . '@' . __FUNCTION__], 200);
+        $this->model::all()->each(fn($model) => $model->delete());
+        $this->model::truncate();
+        return response()->json(['message' => "All {$this->viewData['modelName']} data were Deleted successfully!", 'navigate' => $this->viewData['listUrl']], 200);
+    }
+
+    /**
+     * Remove a file of the specified resource from storage.
+     *
+     * @param  int  $id
+     * @param  string  $field
+     * @param  int  $index
+     * @return \Illuminate\Http\Response
+     */
+    public function apiDeleteFile(Request $request, $id, $field, $file)
+    {
+        $this->authorize('update', $this->model);
+        $data = $this->model::findOrFail($id);
+        $data->removeFileByName($field, $file);
+        return response()->json(['message' => "File {$file} was Deleted successfully!", 'navigate' => str_replace('$1', $id, $this->viewData['editUrl'])], 200);
     }
 
     /**
