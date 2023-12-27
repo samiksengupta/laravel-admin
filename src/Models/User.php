@@ -60,7 +60,6 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     protected $labelColumn = 'username';
     protected $appends = ['active_status', 'locale', 'timezone', 'date_format', 'datetime_format'];
-    // protected $with = ['team:id,number,user_id,type,district_id,municipality_id,ward_id'];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
