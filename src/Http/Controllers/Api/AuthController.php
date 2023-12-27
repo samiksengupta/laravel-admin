@@ -26,8 +26,6 @@ class AuthController extends Controller
         if(!$token = auth('api')->attempt($credentials + ['active' => 1])) {
             return response()->json(['message' => 'Login failed. Invalid credentials or user deactivated.'], 401);
         }
-            
-        auth_user() ? auth_user()->createLog(\App\Models\AccountLog::ACTION_LOGIN) : false;
 
         return response()->json([
             'access_token' => $token,
@@ -68,8 +66,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        auth_user() ? auth_user()->createLog(\App\Models\AccountLog::ACTION_LOGOUT) : false;
-
         auth('api')->logout();
         return response()->json(['message' => 'Token has been invalidated'], 200);
     }
