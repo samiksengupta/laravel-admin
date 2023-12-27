@@ -16,6 +16,7 @@ Route::group(['prefix' => config('laravel-admin.api_prefix')], function() {
         Route::group(['middleware' => ['auth:api']], function()
         {
             Route::post('logout', 'AuthController@logout');
+            Route::get('user-details', 'AuthController@details');
         });
     });
     

@@ -69,4 +69,9 @@ class AuthController extends Controller
         auth('api')->logout();
         return response()->json(['message' => 'Token has been invalidated'], 200);
     }
+
+    public function details(Request $request)
+    {
+        return auth('api')->user();
+    }
 }
