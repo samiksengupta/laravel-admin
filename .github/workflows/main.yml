@@ -1,6 +1,6 @@
 # GithHub Actions Workflow generated with Ghygen
 # Original configuration: https://ghygen.hi-folks.dev?code=b679258905d1c74e02724192485c4c76
-name: Template - Laravel package
+name: Laravel package
 on:
   push:
     branches:
