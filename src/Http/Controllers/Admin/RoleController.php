@@ -19,7 +19,7 @@ class RoleController extends AdminModelController
         $this->viewData['title'] = "Setting permissions for {$this->viewData['title']} : {$data->label()}";
         $this->viewData['data'] = $data;
         // $this->viewData['permissions'] = Permission::query()->pluck('name', 'id');
-        $this->viewData['permissions'] = Auth::user()->role->unrestricted ? Permission::all()->pluck('name', 'id') : Auth::user()->role->permissions()->get()->pluck('name', 'id');
+        $this->viewData['permissions'] = @auth_user()->role->unrestricted ? Permission::all()->pluck('name', 'id') : @auth_user()->role->permissions()->get()->pluck('name', 'id');
         
         return view('laravel-admin::contents/role/permissions', $this->viewData);
     }
@@ -31,7 +31,7 @@ class RoleController extends AdminModelController
         $this->viewData['apiSetPermissionUrl'] = api_admin_url("role/{$id}/permissions");
         $this->viewData['title'] = "Setting permissions for {$this->viewData['title']} : {$data->label()}";
         $this->viewData['data'] = $data;
-        $this->viewData['permissionChunks'] = Auth::user()->role->unrestricted ? Permission::all()->groupBy('group') : Auth::user()->role->permissions()->get()->groupBy('group');
+        $this->viewData['permissionChunks'] = @auth_user()->role->unrestricted ? Permission::all()->groupBy('group') : @auth_user()->role->permissions()->get()->groupBy('group');
         
         return view('laravel-admin::contents/role/permissions-switch', $this->viewData);
     }
