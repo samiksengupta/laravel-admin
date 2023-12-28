@@ -14,7 +14,12 @@ class AuthenticateAdmin
             return $next($request);
         }
 
-        // If not authenticated, redirect to the admin login page
+        // If it's an API route, return JSON response
+        if ($request->is('api/*')) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        // Otherwise redirect
         return redirect()->route('admin.login');
     }
 }
