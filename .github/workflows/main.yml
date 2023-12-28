@@ -1,45 +1,110 @@
-name: run-tests
-
+# GithHub Actions Workflow generated with Ghygen
+# Original configuration: https://ghygen.hi-folks.dev?code=b679258905d1c74e02724192485c4c76
+name: Template - Laravel package
 on:
-    push:
-        branches: [master]
-    pull_request:
-        branches: [master]
+  push:
+    branches:
+      - main
+      - develop
+      - features/**
 
 jobs:
-    test:
-        runs-on: ${{ matrix.os }}
-        strategy:
-            fail-fast: true
-            matrix:
-                os: [ubuntu-latest, windows-latest]
-                php: [7.4, 8.0]
-                laravel: [8.*]
-                stability: [prefer-lowest, prefer-stable]
-                include:
-                    - laravel: 8.*
-                      testbench: ^6.6
+  laravel-tests:
+    runs-on: ubuntu-latest
+# Service container Mysql mysql
+    services:
+      # Label used to access the service container
+      mysql:
+        # Docker Hub image (also with version)
+        image: mysql:latest
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE:  db_test_laravel
+        ## map the "external" 33306 port with the "internal" 3306
+        ports:
+          - 33306:3306
+        # Set health checks to wait until mysql database has started (it takes some seconds to start)
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
-        name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: [ '8.2','8.1' ]
+        dependency-stability: [ 'prefer-none' ]
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+        laravel: [ '10.*','9.*' ]
+        include:
+          - laravel:  10.*
+            testbench: 8.*
+          - laravel:  9.*
+            testbench: 7.*
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php }}
-                  extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-                  coverage: none
+    name: P${{ matrix.php-versions }} - L${{ matrix.laravel }} - ${{ matrix.dependency-stability }} - ${{ matrix.operating-system}}
 
-            - name: Setup problem matchers
-              run: |
-                  echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-                  echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-            - name: Install dependencies
-              run: |
-                  composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-                  composer update --${{ matrix.stability }} --prefer-dist --no-interaction
-            - name: Execute tests
-              run: vendor/bin/phpunit
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install PHP versions
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
+    - name: Get Composer Cache Directory 2
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+    - uses: actions/cache@v3
+      id: actions-cache
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+    - name: Cache PHP dependencies
+      uses: actions/cache@v3
+      id: vendor-cache
+      with:
+        path: vendor
+        key: ${{ runner.OS }}-build-${{ hashFiles('**/composer.lock') }}
+    - name: Install Laravel Dependencies
+      run: |
+        composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+        composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --no-suggest
+
+    - name: Update Dependencies with latest stable
+      if: matrix.dependency-stability == 'prefer-stable'
+      run: composer update --prefer-stable
+    - name: Update Dependencies with lowest stable
+      if: matrix.dependency-stability == 'prefer-lowest'
+      run: composer update --prefer-stable --prefer-lowest
+
+    - name: Generate key
+      run: php artisan key:generate
+    - name: Directory Permissions
+      run: chmod -R 777 storage bootstrap/cache
+    - name: Run Migrations
+# Set environment
+      env:
+        DB_CONNECTION: mysql
+        DB_DATABASE: db_test_laravel
+        DB_PORT: 33306
+        DB_USER: root
+
+      run: php artisan migrate
+
+    - name: Show dir
+      run: pwd
+    - name: PHP Version
+      run: php --version
+
+# Code quality
+
+
+
+
+    - name: Execute Code Static Analysis (PHP Stan + Larastan)
+      run: |
+        composer require --dev nunomaduro/larastan
+        vendor/bin/phpstan analyse src -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
