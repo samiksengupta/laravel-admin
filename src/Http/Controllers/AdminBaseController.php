@@ -11,6 +11,8 @@ class AdminBaseController extends Controller
 
     function __construct()
     {
+        config(['auth.defaults.guard' => 'admin']);
+
         $this->viewData = [
             'title' => "",
             'breadcrumbs' => [],

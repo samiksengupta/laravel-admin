@@ -2,47 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 
-// standard web routes
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // admin web routes
-Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => config('laravel-admin.web_middlewares')], function()
+Route::group(['middleware' => config('laravel-admin.web_admin_middlewares'), 'prefix' => config('laravel-admin.admin_prefix'), 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
 {
-    Route::group(['before' => 'admin.auth', 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
-    {
-        // command panel
-        Route::get('commands', 'SystemController@viewCommands');
-    });
-    
-    
     // Open API routes that are Throttled to 60 hits / min with a 1 min ban
-    Route::group(['middleware' => ['throttle:60,1'], 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
+    Route::group(['middleware' => ['throttle:60,1']], function()
     {
         // setup and update
         Route::get('reset', 'SystemController@doReset');
     
         // login
         Route::get('login', 'AccountController@viewLogin')->name('admin.login');
-        // Route::post('login', 'AccountController@doLogin');
-    
-        // logout
-        // Route::post('logout', 'AccountController@doLogout');
-    
-        // recover
-        // Route::get('recover', 'AccountController@viewRecover');
     
     });
     
     // Closed API routes that are Protected and Throttled to 120 hits / min with a 1 min ban
-    Route::group(['middleware' => ['admin.auth'], 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
+    Route::group(['middleware' => ['auth.admin']], function()
     {
         // dashboard
         Route::get('/', 'SystemController@viewDashboard');
-        
         Route::get('dashboard', 'SystemController@viewDashboard')->name('admin.dashboard');
 
+        // command panel
+        Route::get('commands', 'SystemController@viewCommands');
+
+        // file serve routes
         Route::get('download/stored/{file}', 'SystemController@downloadStoredFile')->where('file', '.*');
         Route::get('download/public/{file}', 'SystemController@downloadPublicFile')->where('file', '.*');
     
@@ -55,6 +39,7 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
         // settings
         // setting do not use numeric ids like a generic CRUD view
         // so /new must take priority over /{id}
+        Route::get('settings', 'SettingController@viewList');
         Route::get('settings/new', 'SettingController@viewForm');
         Route::get('settings/{id}', 'SettingController@viewData');
         Route::get('settings/{id}/edit', 'SettingController@viewForm');
@@ -78,8 +63,15 @@ Route::group(['prefix' => config('laravel-admin.admin_prefix'), 'middleware' => 
         Route::get('users/{id}/edit', 'UserController@viewForm');
         Route::get('users/{id}/delete', 'UserController@viewDelete');
 
+        // api routes
+        Route::get('api-resources', 'ApiResourceController@viewList');
+        Route::get('api-resources/new', 'ApiResourceController@viewForm');
+        Route::get('api-resources/{id}', 'ApiResourceController@viewData');
+        Route::get('api-resources/{id}/edit', 'ApiResourceController@viewForm');
+        Route::get('api-resources/id}/delete', 'ApiResourceController@viewDelete');
         Route::get('api-resources/{apiResource}/test', 'ApiResourceController@viewTest');
 
+        // auto-routing handler
         if(config('laravel-admin.auto_routing')) {
             // generic CRUD views
             // list

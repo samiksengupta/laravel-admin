@@ -166,9 +166,7 @@ class AdminModelController extends AdminBaseController
     public function apiCreate(Request $request)
     {
         $this->authorize('create', $this->model);
-        // dump($request->input());
         $input = $this->model::validate();
-        // dd($input);
         $data = $this->model::create($input);
         return response()->json(['message' => "New {$this->viewData['title']} was Created successfully!", $this->model::keyName() => $data->{$this->model::keyName()}, 'navigate' => $this->viewData['listUrl']], 200);
     }
