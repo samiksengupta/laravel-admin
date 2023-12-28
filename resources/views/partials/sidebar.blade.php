@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ $homeUrl }}" class="brand-link">
+    <a href="{{ $homeUrl }}" class="brand-link" target="_self">
         <img src="{{ admin_asset_url('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">{{ setting('app.title') }}</span>
@@ -14,12 +14,12 @@
                 <img src="{{ admin_asset_url('dist/img/default-avatar-160x160.png') }}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="{{ route('admin.profile') }}" class="d-block">{{ @Auth::user()->name ?? "Guest" }}</a>
+                <a href="{{ route('admin.profile') }}" class="d-block" target="_self">{{ @Auth::user()->name ?? "Guest" }}</a>
             </div>
         </div>
 
         <!-- SidebarSearch Form -->
-        <div class="form-inline">
+        {{-- <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
                 <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
@@ -28,7 +28,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
