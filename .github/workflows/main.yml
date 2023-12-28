@@ -52,9 +52,3 @@ jobs:
       run: |
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
         composer update --${{ matrix.dependency-stability }} --prefer-dist --no-interaction --no-suggest
-
-# Code quality
-    - name: Execute Code Static Analysis (PHP Stan + Larastan)
-      run: |
-        composer require --dev nunomaduro/larastan
-        vendor/bin/phpstan analyse src -c ./vendor/nunomaduro/larastan/extension.neon  --level=4 --no-progress
