@@ -50,7 +50,7 @@ class MenuItem extends BaseModel
             return ($subMenuActive);
         }
         else {
-            return ($this->path == str(request()->path())->after('admin/')->toString());
+            return ($this->path == str(\request()->path())->after(config('laravel-admin.admin_prefix'))->after('/')->before('/')->toString());
         }
         
     }
