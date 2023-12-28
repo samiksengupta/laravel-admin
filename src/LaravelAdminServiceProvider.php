@@ -145,11 +145,13 @@ class LaravelAdminServiceProvider extends ServiceProvider
     {
         // prioritize application routes over package routes
         
-        // api routes
-        $this->loadRoutesFrom(base_path('routes/api.php'));
-        $this->loadRoutesFrom(__DIR__.'/routes/api.php');
-        
-        // web routes
+        // load api routes
+        Route::group(['prefix' => config('laravel-admin.api_prefix')], function () {
+            $this->loadRoutesFrom(base_path('routes/api.php'));
+            $this->loadRoutesFrom(__DIR__.'/routes/api.php');
+        });
+
+        // load web routes
         $this->loadRoutesFrom(base_path('routes/web.php'));
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
     }
