@@ -43,7 +43,6 @@
                 "text": "Commands",
                 "icon_class": "fas fa-terminal",
                 "path": "commands",
-                "target": "_blank",
                 "permission": "System.commands"
             }
         ]
