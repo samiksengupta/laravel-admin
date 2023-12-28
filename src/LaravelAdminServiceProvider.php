@@ -16,7 +16,7 @@ use Samik\LaravelAdmin\Console\LaravelAdminInstallCommand;
 use Samik\LaravelAdmin\Console\FactoryResetCommand;
 use Samik\LaravelAdmin\Console\SeedSpamCommand;
 
-use Samik\LaravelAdmin\Http\Middlewares\Authenticate;
+use Samik\LaravelAdmin\Http\Middlewares\AuthenticateAdmin;
 
 class LaravelAdminServiceProvider extends ServiceProvider
 {
@@ -26,9 +26,9 @@ class LaravelAdminServiceProvider extends ServiceProvider
      */
     public function register()
     {       
-        // Set admin.auth middleware alias
+        // Set auth.admin middleware alias
         $router = $this->app->make(Router::class);
-        $router->aliasMiddleware('admin.auth', Authenticate::class);
+        $router->aliasMiddleware('auth.admin', AuthenticateAdmin::class);
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-admin', function () {

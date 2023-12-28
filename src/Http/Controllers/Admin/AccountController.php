@@ -23,14 +23,14 @@ class AccountController extends AdminBaseController
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials + ['active' => 1], true)) {
+        if (Auth::guard('admin')->attempt($credentials + ['active' => 1], true)) {
 
             $request->session()->regenerate();
             return response()->json([
                 'message' => 'Your login was Successful. You will be redirected soon.', 
                 'navigate' => session()->get('url.intended', \admin_url('/')), 
                 'timeout' => 2000,
-                'authenticated' => Auth::check()
+                'authenticated' => Auth::guard('admin')->check()
             ], 200);
         }
         
@@ -39,8 +39,7 @@ class AccountController extends AdminBaseController
 
     public function apiLogout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
+        Auth::guard('admin')->logout();
         $request->session()->regenerateToken();
         return response()->json(['message' => 'Your have been logged out. You will be redirected soon.', 'navigate' => admin_url('login')], 200);
     }

@@ -39,11 +39,13 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            'cookie' => 'web_session',
         ],
 
         'admin' => [
             'driver' => 'session',
             'provider' => 'users',
+            'cookie' => 'admin_session',
         ],
 
         'api' => [
