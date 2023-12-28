@@ -92,6 +92,12 @@ function navigate(url, delay = 1000) {
     setTimeout(function () { window.location = url; }, delay);
 }
 
+function scrollTo(selector, duration = 1000) {
+    $('html, body').animate({
+        scrollTop: $(selector).offset().top
+    }, duration);
+}
+
 function populateOptions(selector, dataset, selected) {
     let el = $(selector);
     el.empty();
