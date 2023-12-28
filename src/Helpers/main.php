@@ -112,7 +112,7 @@ if (!function_exists('auth_user')) {
     function auth_user()
     {
         try {
-            return \Auth::user() ?? auth('api')->user() ?? null;
+            return auth('admin')->user() ?? auth('api')->user() ?? null;
         }
         catch(Exception $e) {
             return null;
