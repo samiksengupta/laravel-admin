@@ -250,7 +250,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
 
     public static function editableProfile()
     {
-        return ['name', 'email', 'password', 'locale', 'timezone', 'date_format', 'datetime_format'];
+        return ['name', 'email', 'phone', 'password', 'locale', 'timezone', 'date_format', 'datetime_format'];
     }
 
     public static function getQuery()
