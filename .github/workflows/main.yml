@@ -32,7 +32,7 @@ jobs:
       matrix:
         operating-system: [ubuntu-latest]
         php-versions: [ '8.2','8.1' ]
-        stability: [prefer-lowest, prefer-stable]
+        dependency-stability: [prefer-lowest, prefer-stable]
 
         laravel: [ '10.*','9.*' ]
         include:
