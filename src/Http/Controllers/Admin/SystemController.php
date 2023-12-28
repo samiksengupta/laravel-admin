@@ -28,18 +28,13 @@ class SystemController extends AdminBaseController
             return "Cannot reset while App is in production";
         }
     }
-    
-    public function viewConsole(Request $request)
-    {
-        $this->authorize('console', System::class);
-        return LaravelWebConsole::show();
-    }
 
     public function viewCommands(Request $request)
     {
         $this->authorize('commands', System::class);
-        $title = 'Command Panel';
-        $url = api_admin_url('command');
+        
+        $this->viewData['title'] = 'Command Panel';
+        $this->viewData['url'] = api_admin_url('command');
 
         //Check if app is not local
         if (!\App::environment('local')) {
@@ -47,9 +42,9 @@ class SystemController extends AdminBaseController
         }
 
         // get the full list of artisan commands and store the output
-        $commands = $this->getArtisanCommands();
+        $this->viewData['commands'] = $this->getArtisanCommands();
 
-        return view('laravel-admin::contents/system/commands', compact('title', 'url', 'commands'));
+        return view('laravel-admin::contents/system/commands', $this->viewData);
     }
 
     public function apiCommand(Request $request)
