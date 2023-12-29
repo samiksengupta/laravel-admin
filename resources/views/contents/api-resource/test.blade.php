@@ -92,13 +92,13 @@
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-sm-12">
-                                                <button id="json-fill" class="btn btn-info input-btn pull-left" type="button">Populate</button>
+                                                <button id="json-fill" class="btn btn-info input-btn pull-left rounded-0" type="button">Populate</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <button id="test-api" class="btn btn-success input-btn btn-lg" type="submit">{{ $requestButtonText }}</button>
+                            <button id="test-api" class="btn btn-success input-btn btn-lg rounded-0" type="submit">{{ $requestButtonText }}</button>
                         </div>
                     </div>
                     <hr/>
@@ -124,7 +124,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer rounded-0">
-                <a type="button" id="cancel-button" class="btn btn-default rounded-0 float-right" href="{{ admin_url('api-resources') }}">Cancel</a>
+                <button type="button" id="cancel-button" class="btn btn-default rounded-0 float-right" data-url="{{ $listUrl }}" title="Cancel">Cancel</button>
             </div>
         </div>
         </form>

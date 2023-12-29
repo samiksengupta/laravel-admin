@@ -39,6 +39,13 @@ function bindEvents() {
 
     $('#form-params').text('');
     $('#form-response').text('');
+
+
+
+    $('#cancel-button').click(function () {
+        let cancelUrl = $(this).data('url');
+        if (cancelUrl) navigate(cancelUrl, 100);
+    })
 }
 
 function updateApiUrl() {
