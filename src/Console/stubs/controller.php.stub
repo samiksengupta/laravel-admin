@@ -2,6 +2,7 @@
 
 namespace DummyNamespace;
 
+use Illuminate\Http\Request;
 use Samik\LaravelAdmin\Http\Controllers\AdminModelController;
 
 class DummyClass extends AdminModelController
