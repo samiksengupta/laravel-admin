@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 // admin web routes
 Route::group(['middleware' => config('laravel-admin.web_admin_middlewares'), 'prefix' => config('laravel-admin.admin_prefix'), 'namespace' => config('laravel-admin.admin_controller_namespace')], function()
 {
-    // Open API routes that are Throttled to 60 hits / min with a 1 min ban
+    // Open routes that are Throttled to 60 hits / min with a 1 min ban
     Route::group(['middleware' => ['throttle:60,1']], function()
     {
         // setup and update
@@ -16,7 +16,7 @@ Route::group(['middleware' => config('laravel-admin.web_admin_middlewares'), 'pr
     
     });
     
-    // Closed API routes that are Protected and Throttled to 120 hits / min with a 1 min ban
+    // Secure routes that are Protected and Throttled to 120 hits / min with a 1 min ban
     Route::group(['middleware' => ['auth.admin']], function()
     {
         // dashboard
@@ -63,7 +63,7 @@ Route::group(['middleware' => config('laravel-admin.web_admin_middlewares'), 'pr
         Route::get('users/{id}/edit', 'UserController@viewForm');
         Route::get('users/{id}/delete', 'UserController@viewDelete');
 
-        // api routes
+        // api resources
         Route::get('api-resources', 'ApiResourceController@viewList');
         Route::get('api-resources/new', 'ApiResourceController@viewForm');
         Route::get('api-resources/{id}', 'ApiResourceController@viewData');
