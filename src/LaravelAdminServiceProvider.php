@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Routing\Router;
 
 use Samik\LaravelAdmin\Console\CreateUserCommand;
+use Samik\LaravelAdmin\Console\CreatePermissionCommand;
 use Samik\LaravelAdmin\Console\ModuleMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedModelMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedControllerMakeCommand;
@@ -103,6 +104,7 @@ class LaravelAdminServiceProvider extends ServiceProvider
             // Registering package commands.
             $this->commands([
                 CreateUserCommand::class,
+                CreatePermissionCommand::class,
                 ModuleMakeCommand::class,
                 ExtendedModelMakeCommand::class,
                 ExtendedControllerMakeCommand::class,
