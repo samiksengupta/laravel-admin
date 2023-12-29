@@ -8,7 +8,7 @@ use Samik\LaravelAdmin\Database\Seeders\DatabaseSeeder;
 
 class CreateUserCommand extends Command
 {
-    protected $signature = 'create:user {username : The Username for the user} {role=Admin : The role name/ID for the user} {--a|auto : Wheather to autofill the required data}';
+    protected $signature = 'create:user {username : The Username for the user} {role=Admin : The role name/ID for the user} {--a|auto : Whether to autofill the required data}';
 
     protected $description = 'Create new User';
 
