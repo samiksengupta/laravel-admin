@@ -26,9 +26,10 @@ class AdminModelController extends AdminBaseController
         $this->viewData['showCancelButton'] = true;
         $this->viewData['showPageAction'] = true;
         $this->viewData['listUrl'] = admin_url($this->model::resourceName());
+        $this->viewData['dataUrl'] = admin_url($this->model::resourceName() . "/$1");
         $this->viewData['createUrl'] = admin_url($this->model::resourceName() . '/new');
         $this->viewData['editUrl'] = admin_url($this->model::resourceName() . '/$1/edit');
-        $this->viewData['deleteUrl'] = admin_url($this->model::resourceName() . '/$1');
+        $this->viewData['deleteUrl'] = admin_url($this->model::resourceName() . '/$1/delete');
         $this->viewData['apiListUrl'] = api_admin_url($this->model::resourceName() . '/dt');
         $this->viewData['apiCreateUrl'] = api_admin_url($this->model::resourceName());
         $this->viewData['apiUpdateUrl'] = api_admin_url($this->model::resourceName() . '/$1');

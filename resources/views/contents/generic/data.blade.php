@@ -23,7 +23,7 @@
                     @can('update', $model) <button type="button" onclick="window.location.href = '{{ $editUrl }}';" id="edit-button" class="btn btn-info rounded-0">Edit</button> @endcan
                     <button type="button" id="cancel-button" class="btn btn-default rounded-0 float-right" data-url="{{ $listUrl }}">Cancel</button>
                     @if($modal)
-                        <button type="button" id="expand-button" class="btn btn-default rounded-0 float-right navigable" data-url="{{ str_replace('$1', $data->{$model::keyName()}, $editUrl) }}" title="Expand"><i class="fas fa-expand"></i></button>
+                        <button type="button" id="expand-button" class="btn btn-default rounded-0 float-right navigable" data-url="{{ str_replace('$1', $data->{$model::keyName()}, $dataUrl) }}" title="Expand"><i class="fas fa-expand"></i></button>
                     @endif
                 </div>
             </div>
