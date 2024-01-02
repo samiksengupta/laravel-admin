@@ -17,19 +17,38 @@ class CreatePermissionCommand extends Command
         $seed = $this->option('seed');
         $all = $this->option('all');
 
-        $added = $this->addPermissionToJson($permission);
+        // Generate prompt for confirmation
+        $tasks = [];
+        $tasks[] = "add a Permission entry to the JSON data file";;
+        if($all || $policy) $tasks[] = "insert a Policy entry in the policy file";
+        if($all || $seed) $tasks[] = "seed PermissionSeeder to the database";
+        
+        $prompt = "This will " . (function() use($tasks) {
+            $message = "";
+            foreach($tasks as $i => $task) $message .= ($i < count($tasks) - 1) ? "{$task}, " : "and {$task}";
+            return $message;
+        })() . ". Continue?";
 
-        if ($all || $policy) {
-            $this->addToPolicy($permission);
-        }
+        if($this->confirm($prompt, true)) {
+            $added = $this->addPermissionToJson($permission);
 
-        if ($added) {
-            if ($all || $seed) {
-                $this->call('db:seed', ['--class' => 'PermissionSeeder']);
-            } else {
-                $this->info("Please run PermissionSeeder to persist changes to the database.");
+            if ($all || $policy) {
+                $this->addToPolicy($permission);
+            }
+    
+            if ($added) {
+                if ($all || $seed) {
+                    $this->call('db:seed', ['--class' => 'PermissionSeeder']);
+                } else {
+                    $this->info("Please run PermissionSeeder to persist changes to the database.");
+                }
             }
         }
+        else {
+            $this->info("Permission creation aborted.");
+        }
+
+        
     }
 
     private function addPermissionToJson($permission)

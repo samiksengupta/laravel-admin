@@ -29,23 +29,46 @@ class CreateApiCommand extends Command
             $this->warn("Controller name could not be read from action: {$action}. Aborting...");
             return false;
         }
-        
-        // Add routes to routes/api.php
-        $this->addToRouteFile($verb, $path, $routeAction);
-        
-        // Create controller
-        $this->createController($verb, $path, $routeAction, $modelName);
 
-        // Generate ApiResource for testing
+        // Generate prompt for confirmation
+        $tasks = [];
+        $tasks[] = "insert a Route entry in the route file";
+        $tasks[] = "create a Controller file with methods at {$routeAction['fullNamespace']}\\{$routeAction['controller']}";
         if($all || $apiResource) {
-            $this->addApiResourceToJson($verb, $path, $routeAction, $apiResource, $modelName);
+            $tasks[] = "add one or several ApiResource entries to the JSON data file";
+            if($all || $seed) $tasks[] = "seed ApiResourceSeeder to the database";
         }
+        
+        $prompt = "This will " . (function() use($tasks) {
+            $message = "";
+            foreach($tasks as $i => $task) $message .= ($i < count($tasks) - 1) ? "{$task}, " : "and {$task}";
+            return $message;
+        })() . ". Continue?";
 
-        // Seed ApiResource
-        if ($all || $seed) {
-            $this->call('db:seed', ['--class' => 'ApiResourceSeeder']);
-        } else {
-            $this->info("Please run ApiResourceSeeder to persist changes to the database.");
+        if($this->confirm($prompt, true)) {
+
+            // Add routes to routes/api.php
+            $this->addToRouteFile($verb, $path, $routeAction);
+                    
+            // Create controller
+            $this->createController($verb, $path, $routeAction, $modelName);
+
+            // Generate ApiResource for testing
+            if($all || $apiResource) {
+
+                $added = $this->addApiResourceToJson($verb, $path, $routeAction, $apiResource, $modelName);
+                
+                if ($added) {
+                    if($all || $seed) {
+                        $this->call('db:seed', ['--class' => 'ApiResourceSeeder']);
+                    } else {
+                        $this->info("Please run ApiResourceSeeder to persist changes to the database.");
+                    }
+                }
+            }
+        }
+        else {
+            $this->info("Api creation aborted.");
         }
     }
 
@@ -201,7 +224,7 @@ class CreateApiCommand extends Command
             $isResource = $this->isResource($verb, $routeAction);
             if($isResource) {
                 $resourcePathName = $path;
-                $resourceIdentifierName = $modelName ? str($modelName)->singular()->toString() : 'id';
+                $resourceIdentifierName = $modelName ? str($modelName)->camel()->singular()->toString() : 'id';
                 foreach([
                     [
                         'method' => 'GET',
@@ -235,7 +258,7 @@ class CreateApiCommand extends Command
                     }
 
                     $jsonContent[] = [
-                        'name' => $name ?? "{$endpoint['method']} {$endpoint['path']}",
+                        'name' => "{$endpoint['method']} {$endpoint['path']}",
                         'method' => $endpoint['method'],
                         'route' => $endpoint['path'],
                         'fields' => $fields,
@@ -274,6 +297,7 @@ class CreateApiCommand extends Command
             $this->warn("ApiResource array not found in {$filePath}. Skipping...");
             return false;
         }
+        return false;
     }
 
     private function extractFromRouteActionString($action) 
@@ -294,6 +318,7 @@ class CreateApiCommand extends Command
         
         // Output the results
         return [
+            'fullNamespace' => "app\\Http\\Controllers\\{$namespace}",
             'namespace' => $namespace,
             'controller' => $controller,
             'method' => $method,
