@@ -5,9 +5,9 @@ namespace Samik\LaravelAdmin\Console;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
-class ModuleMakeCommand extends Command
+class MakeModuleCommand extends Command
 {
-    protected $signature = 'make:module {name : The class name for the Model } {--a|all : Create seeders for Permissions and MenuItems, run Seeders and Grant permissions to all roles } {--p|permissions : Create Permissions } {--m|menuitems : Create MenuItems} {--s|seed : Seed Permissions and MenuItems} {--g|grant : Grant seeded permissions to all roles }';
+    protected $signature = 'make:module {name : The class name for the Model } {--p|permissions : Create Permissions } {--m|menuitems : Create MenuItems} {--s|seed : Seed Permissions and MenuItems} {--g|grant : Grant seeded permissions to all roles } {--a|all : Create seeders for Permissions and MenuItems, run Seeders and Grant permissions to all roles}';
 
     protected $description = 'Create a new extended model class with migration, controller and policy';
 

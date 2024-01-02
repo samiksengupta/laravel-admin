@@ -6,16 +6,16 @@ use Illuminate\Console\Command;
 
 class CreatePermissionCommand extends Command
 {
-    protected $signature = 'create:permission {permission : The permission to create in Model.action format} {--a|all : Add to policy and run permission seeder } {--p|policy : Whether to add to policy} {--s|seed : Whether to seed permission seeder}';
+    protected $signature = 'create:permission {permission : The permission to create in Model.action format} {--p|policy : Whether to add to policy} {--s|seed : Whether to seed permission seeder} {--a|all : Add to policy and run permission seeder}';
 
     protected $description = 'Create new Permission';
 
     public function handle()
     {
         $permission = $this->argument('permission');
-        $all = $this->option('all');
         $policy = $this->option('policy');
         $seed = $this->option('seed');
+        $all = $this->option('all');
 
         $added = $this->addPermissionToJson($permission);
 
@@ -80,7 +80,7 @@ class CreatePermissionCommand extends Command
         $policyContent = file_get_contents($filePath);
 
         // Check if there is an existing class and it's closed
-        if (preg_match("/class\s+{$model}Policy\s+extends\s+CrudPolicy\s*{(.*)}/s", $policyContent, $matches) && $insertPosition = $this->nthLastPos($policyContent, "}", 2)) {
+        if (preg_match("/class\s+{$model}Policy\s+extends\s+CrudPolicy\s*{(.*)}/s", $policyContent, $matches) && $insertPosition = nth_last_index($policyContent, "}", 2)) {
 
             $functionName = str($action)->camel()->toString(); // Assuming function names are in camelCase
 

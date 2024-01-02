@@ -9,7 +9,8 @@ use Illuminate\Routing\Router;
 
 use Samik\LaravelAdmin\Console\CreateUserCommand;
 use Samik\LaravelAdmin\Console\CreatePermissionCommand;
-use Samik\LaravelAdmin\Console\ModuleMakeCommand;
+use Samik\LaravelAdmin\Console\CreateApiCommand;
+use Samik\LaravelAdmin\Console\MakeModuleCommand;
 use Samik\LaravelAdmin\Console\ExtendedModelMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedControllerMakeCommand;
 use Samik\LaravelAdmin\Console\ExtendedPolicyMakeCommand;
@@ -105,7 +106,8 @@ class LaravelAdminServiceProvider extends ServiceProvider
             $this->commands([
                 CreateUserCommand::class,
                 CreatePermissionCommand::class,
-                ModuleMakeCommand::class,
+                CreateApiCommand::class,
+                MakeModuleCommand::class,
                 ExtendedModelMakeCommand::class,
                 ExtendedControllerMakeCommand::class,
                 ExtendedPolicyMakeCommand::class,

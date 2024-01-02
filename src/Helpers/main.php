@@ -488,6 +488,57 @@ if (!function_exists('clean_text')) {
     }
 }
 
+if (!function_exists('nth_last_index')) {
+    // Find the index of the nth occurance of a string inside a string from the last
+    function nth_last_index(string $haystack, string $needle, int $n = 1) { 
+        $index = false; 
+        while($n > 0) {
+            $index = strrpos($haystack, $needle, $index !== false ? $index - 1 : 0);
+            if($index === false) break;
+            $n--;
+        }
+        return $index; 
+    }
+}
+
+if (!function_exists('calculate_brace_nesting_Level')) {
+    // calculate the level of nesting in a string based on braces opened and closed
+    function calculate_brace_nesting_Level($contents, $startPos, $endPos) {
+        $count = 0;
+        $braceStack = [];
+
+        // count unclosed
+        for ($i = $startPos; $i <= $endPos; $i++) {
+            $char = $contents[$i];
+
+            if ($char === '{') {
+                // Increment count and push the position onto the stack
+                $count++;
+                array_push($braceStack, $i);
+            } elseif ($char === '}') {
+                // Decrement count if there's a matching opening brace
+                if (!empty($braceStack)) {
+                    array_pop($braceStack);
+                    $count--;
+                }
+            }
+        }
+        return $count;
+    }
+}
+
+if (!function_exists('generate_indent')) {
+    // igenerate indent based on level
+    function generate_indent($level, $usingSpaces = true) {
+        $indent = '';
+        while($level > 0) {
+            $indent .= $usingSpaces ? "    " : "\t";
+            --$level;
+        }
+        return $indent;
+    }
+}
+
 if (!function_exists('file_url')) {
     // Tries to return url to file
     function file_url($path)
