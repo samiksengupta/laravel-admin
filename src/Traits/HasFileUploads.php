@@ -50,7 +50,7 @@ trait HasFileUploads
                 }
             }
             // handle file inputs
-            elseif($this->isDirty($field)) {
+            elseif($this->isDirty($field) && request()->file($field)) {
                 $files = request()->file($field);
                 if($files) {
                     if(\is_array($files)) {
