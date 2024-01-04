@@ -9,6 +9,7 @@
             'data-default' => isset($element['value']) && \is_scalar($element['value']) ? $element['value'] : (isset($element['value']) && \is_array($element['value']) ? \json_encode($element['value']) : ''),
         ] + $element['attr'];
     $element['value'] = ($element['serializeValue'] ?? false) && \is_array($element['value']) ? collect($element['value'])->toJson() : $element['value'];
+    $element['options'] = @$element['options'] ?? [];
 @endphp
 @if ($element['label'] ?? false)
     {{ html()->label($element['label'])->for($key)->class('col-form-label') }}
